@@ -1,0 +1,6 @@
+# 运行时锁：取回工件钉死为 python.org 官方 NuGet 包（与学生离线包同源同布局）。
+# 升级运行时 = 只改本文件（版本、SHA256、来源 URL），其余代码不动。
+version=3.13.5
+sha256=fc496ae8aa3f7318704e24c4885c0cc0e3e6060c6e8af28aaa266226c01d96a1
+url=https://api.nuget.org/v3-flatcontainer/python/3.13.5/python.3.13.5.nupkg
+url=https://github.com/FAST-CERN/EMG_LAB/releases/download/runtime/python-3.13.5.nupkg

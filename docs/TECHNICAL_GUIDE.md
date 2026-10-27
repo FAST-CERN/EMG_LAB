@@ -495,7 +495,7 @@ flowchart LR
 
 `reports.py` 汇总已有基础评估与金币报告，导出 HTML、JSON 及现有比赛指令日志，不重新计分。模型名称、输入来源与记录编号仍保留在原报告中。
 
-Windows 学生离线包内含 `.runtime/python313` 和 `wheelhouse`。`install.cmd` 调用 `scripts/bootstrap.py` 校验依赖后创建本目录的 `.venv`；重复运行可补完中断安装。`检查环境.cmd` 检查网络前向计算、机器人物理站稳、手部姿态与两种 3D 渲染，结果写入 `local/classroom_check.json`，不会连接真实设备。测试命令仍为 `.venv\Scripts\python.exe -m pytest -q`。
+Windows 学生离线包内含 `.runtime/python313` 和 `wheelhouse`。`install.cmd` 按优先级链选择解释器：本地运行时 `.runtime` > 系统解释器 `py -3.13` > 按 `scripts/runtime.lock`（版本 + SHA256 + 官方与镜像 URL）由 `scripts/fetch_runtime.cmd` 取回同源 python.org NuGet 工件到 `.runtime\python313`；哈希失配即拒绝解压，失败时提示改用学生离线包。随后 `scripts/bootstrap.py` 校验依赖后创建本目录的 `.venv`；重复运行可补完中断安装。取回脚本必须保持：GBK 编码中文、CRLF 行尾、系统工具钉死 `%SystemRoot%\System32`（PATH 可能解析到 Git 的 GNU tar，读不了 zip）、全程相对路径（tar 把 `C:\` 当远程主机名且不支持 `--force-local`）——这些约束源于 cmd 解析器的缺陷，改动时勿破。`检查环境.cmd` 检查网络前向计算、机器人物理站稳、手部姿态与两种 3D 渲染，结果写入 `local/classroom_check.json`，不会连接真实设备。测试命令仍为 `.venv\Scripts\python.exe -m pytest -q`。
 
 
 ## 16 扩展分类任务

@@ -8,7 +8,7 @@
 
 学生离线包完整解压后，运行 `install.cmd`，再运行 `start.cmd`。随包 Python 3.13、固定版本依赖和场景资源可用于无网络安装；只在当前目录创建 `.venv`，不安装硬件驱动。首次运行可选择模拟设备。详细入口见 `开始使用.txt`，软件内按 F1 打开帮助。
 
-仅获取源码而没有 `.runtime` / `wheelhouse` 时，需要自行安装 Python 3.13 x64，并联网运行 `install.cmd`。CPU 即可训练和推理，3D 需要 OpenGL。
+两种方式均为正式安装渠道。除学生离线包外，可**联网在线安装**：从 GitHub 克隆或下载 ZIP 解压（<https://github.com/FAST-CERN/EMG_LAB>），运行 `install.cmd`——本机没有 Python 3.13 时会按 `scripts/runtime.lock` 自动取回与学生离线包同源的 Python 3.13.5，再在线安装依赖，全程约需 600MB 下载。CPU 即可训练和推理，3D 需要 OpenGL；无网环境仍请使用学生离线包。
 
 ## 课堂功能
 

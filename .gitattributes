@@ -8,3 +8,4 @@ vendor/** -whitespace
 vendor/** -text
 assets/** -text
 drivers/cometa/Win10/** -text
+scripts/runtime.lock text eol=crlf
