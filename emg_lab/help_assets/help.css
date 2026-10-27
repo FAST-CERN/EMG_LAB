@@ -31,13 +31,36 @@ code {
   padding: 1px 5px;
   border-radius: 3px;
 }
+/* Fenced code blocks: card look (theme.py QFrame#card), long lines wrap. */
 pre {
   background: var(--panel);
+  border: 1px solid var(--line);
   padding: 10px 12px;
-  border-radius: 6px;
-  overflow-x: auto;
+  border-radius: 8px;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
 }
 pre code { background: none; padding: 0; font-size: 13px; }
+
+/* highlight.js github 主题只管配色；容器外观、底色与换行由本文件接管。 */
+.hljs { background: transparent; }
+pre code.hljs { display: block; padding: 0; overflow-x: visible; background: transparent; }
+
+/* 语言徽标：围栏语言原文，右对齐悬浮于代码块上方一行。 */
+pre[data-lang]::before {
+  content: attr(data-lang);
+  display: block;
+  width: fit-content;
+  margin: 0 0 6px auto;
+  padding: 1px 7px;
+  font-family: Consolas, "Courier New", monospace;
+  font-size: 11px;
+  line-height: 1.6;
+  color: #66748c;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+}
 table { border-collapse: collapse; margin: 10px 0; }
 th, td { border: 1px solid var(--line); padding: 6px 10px; text-align: left; }
 th { background: var(--panel); }
@@ -51,6 +74,6 @@ hr { border: none; border-top: 1px solid var(--line); margin: 16px 0; }
 img { max-width: 100%; }
 
 /* Mermaid diagrams render centered on white, without the code-panel chrome. */
-pre.mermaid { background: #fff; text-align: center; overflow-x: auto; }
+pre.mermaid { background: #fff; border: none; text-align: center; overflow-x: auto; }
 pre.mermaid svg { max-width: 100%; height: auto; }
 pre.mermaid.mermaid-error { color: #b00020; text-align: left; white-space: pre-wrap; }

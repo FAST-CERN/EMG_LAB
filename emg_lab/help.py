@@ -1,10 +1,11 @@
 """Searchable offline help, using the same Markdown files as the developer docs.
 
-Chapters render in a local QtWebEngine page with marked + mermaid from
-``emg_lab/help_assets`` (fully offline), so the Mermaid diagrams in the guides
-draw as SVG.  When QtWebEngine or those scripts are unavailable — for example
-offscreen test runs — the same chapters fall back to a plain QTextBrowser
-where Mermaid blocks show as code.
+Chapters render in a local QtWebEngine page with marked + mermaid +
+highlight.js from ``emg_lab/help_assets`` (fully offline), so the Mermaid
+diagrams in the guides draw as SVG and fenced code gets language badges with
+python/json/powershell syntax color.  When QtWebEngine or those scripts are
+unavailable — for example offscreen test runs — the same chapters fall back
+to a plain QTextBrowser where Mermaid blocks show as code.
 """
 from pathlib import Path
 import html as html_lib
@@ -16,13 +17,20 @@ from .storage import ROOT
 
 ASSETS = Path(__file__).resolve().parent / 'help_assets'
 
+# 资源门禁：任一文件缺失即整窗降级 TextHelpBrowser，不开半残的 Web 页。
+ASSET_FILES = ('marked.min.js', 'mermaid.min.js', 'highlight.min.js',
+               'highlight-powershell.min.js', 'highlight-github.min.css')
+
 PAGE_TEMPLATE = """<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
 <meta charset="utf-8">
+<link rel="stylesheet" href="highlight-github.min.css">
 <link rel="stylesheet" href="help.css">
 <script src="marked.min.js"></script>
 <script src="mermaid.min.js"></script>
+<script src="highlight.min.js"></script>
+<script src="highlight-powershell.min.js"></script>
 </head>
 <body>
 <div id="content"></div>
@@ -37,6 +45,21 @@ PAGE_TEMPLATE = """<!DOCTYPE html>
     return;
   }
   host.innerHTML = marked.parse(source);
+
+  // 语言徽标与高亮：徽标显示围栏语言原文；text/plain 家族视为无语言，
+  // 不徽标不高亮；mermaid 围栏整体交给图表渲染，同样不徽标；
+  // 高亮只对收录语言（python/json/powershell 及别名）生效。
+  var PLAIN = ['text', 'text/plain', 'plaintext', 'txt'];
+  var HIGHLIGHT = { python: 1, py: 1, json: 1, powershell: 1, ps: 1, ps1: 1 };
+  host.querySelectorAll('pre > code[class*="language-"]').forEach(function (el) {
+    var lang = (el.className.match(/language-(\\S+)/) || [])[1];
+    if (!lang) return;
+    var key = lang.toLowerCase();
+    if (PLAIN.indexOf(key) !== -1 || key === 'mermaid') return;
+    el.parentElement.setAttribute('data-lang', lang);
+    if (typeof hljs !== 'undefined' && HIGHLIGHT[key]) hljs.highlightElement(el);
+  });
+
   if (typeof mermaid === 'undefined') return;
   var graphs = [];
   host.querySelectorAll('code.language-mermaid').forEach(function (el) {
@@ -68,6 +91,11 @@ except Exception:  # pragma: no cover - PySide6 Addons missing on exotic install
     QtWebEngineCore = QtWebEngineWidgets = None
 
 
+def _assets_complete():
+    """资源门禁的文件检查：help_assets 里门禁清单文件逐一存在。"""
+    return all((ASSETS / name).is_file() for name in ASSET_FILES)
+
+
 def _webengine_available():
     """QtWebEngine is used only on interactive platforms with local scripts."""
     if QtWebEngineWidgets is None or QtWebEngineCore is None:
@@ -75,8 +103,7 @@ def _webengine_available():
     app = W.QApplication.instance()
     if app is not None and app.platformName() == 'offscreen':
         return False
-    return ((ASSETS / 'marked.min.js').exists()
-            and (ASSETS / 'mermaid.min.js').exists())
+    return _assets_complete()
 
 
 def _chapter_html(markdown):
@@ -128,7 +155,7 @@ if QtWebEngineWidgets is not None:
             return None
 
     class WebHelpBrowser(QtWebEngineWidgets.QWebEngineView):
-        """Offline HTML renderer driven by help_assets (marked + mermaid)."""
+        """Offline HTML renderer driven by help_assets (marked + mermaid + hljs)."""
 
         def __init__(self, parent=None):
             super().__init__(parent)

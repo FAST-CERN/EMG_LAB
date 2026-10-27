@@ -171,5 +171,12 @@
     "assets": "emg_lab/help_assets (marked 18.1.2 UMD-min, mermaid 12.2.0 dist, project-authored help.css)",
     "license_and_hashes": "licenses/help-js/README.md",
     "reason": "docs/TECHNICAL_GUIDE.md architecture diagrams moved to Mermaid fences; render them as SVG in the offline F1 help"
+  },
+  "help_code_highlight_20261027": {
+    "date": "2026-10-27",
+    "implementation": "emg_lab/help.py badges fenced code with the fence's original language text and highlights python/json/powershell after marked renders; text-plain fences and fences without a language stay plain; the asset gate degrades the whole window to TextHelpBrowser when any hljs file is missing",
+    "assets": "emg_lab/help_assets (highlight.js 11.12.0 common UMD-min + powershell language pack + official github light theme)",
+    "license_and_hashes": "licenses/help-js/README.md",
+    "reason": "course guides' code fences need offline syntax color and language badges; common bundle lacks powershell, so the language pack rides along"
   }
 }

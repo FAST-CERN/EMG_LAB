@@ -2,6 +2,6 @@
 
 本仓库供已获授权的课程参与者使用。真实采集数据、个人模型、设备许可和本机日志不随仓库发布；`examples/模拟示例包` 是合成信号演示。
 
-场景、网格、运控策略、设备 SDK、驱动及私有依赖保留各自的来源和许可。详见 `licenses/`、`SOURCE_PROVENANCE.json`、`assets/` 中的来源记录及 `drivers/cometa/README.md`。本仓库没有将所有第三方内容重新授权为同一种开源许可。
+场景、网格、运控策略、设备 SDK、驱动及私有依赖保留各自的来源和许可。详见 `licenses/`、`SOURCE_PROVENANCE.json`、`assets/` 中的来源记录及 `drivers/cometa/README.md`。帮助窗口自带的 marked、mermaid（MIT）与 highlight.js（BSD-3-Clause）前端脚本同样保留原许可，见 `licenses/help-js/`。本仓库没有将所有第三方内容重新授权为同一种开源许可。
 
 需要向课程以外的人分发这些组件时，应分别核对其原有使用与分发条件。

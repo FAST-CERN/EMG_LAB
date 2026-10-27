@@ -1,7 +1,9 @@
-"""Help-window acceptance: QtWebEngine renders docs chapters with Mermaid SVGs.
+"""Help-window acceptance: QtWebEngine renders docs chapters with Mermaid SVGs,
+code language badges and highlight.js coloring.
 
 Run on a desktop session (not offscreen): the technical guide's Mermaid
-diagrams must draw, every tab must load, and no diagram may report an error.
+diagrams must draw, every tab must load, no diagram may report an error, and
+each fenced code block must carry the right badge/highlight decision.
 """
 import json
 import re
@@ -9,8 +11,26 @@ import sys
 import time
 from PySide6 import QtWidgets as W
 
-from emg_lab.help import HelpDialog, WebHelpBrowser
+from emg_lab.help import HelpDialog, WebHelpBrowser, PAGE_TEMPLATE
 from emg_lab.storage import ROOT
+
+# 语言清单一律以页面脚本为准，从这里解析，不维护第二份手工副本。
+# 徽标豁免 = PLAIN 家族 + mermaid（图表围栏整体替换，不标徽标）。
+_TMPL_PLAIN = re.search(r"var PLAIN = \[([^\]]*)\];", PAGE_TEMPLATE)
+_TMPL_HL = re.search(r"var HIGHLIGHT = \{([^}]*)\};", PAGE_TEMPLATE)
+PLAIN_LANGS = ({w.strip().strip("'\"") for w in _TMPL_PLAIN.group(1).split(',')}
+               | {'mermaid'})
+HIGHLIGHT_LANGS = {w.split(':')[0].strip() for w in _TMPL_HL.group(1).split(',')
+                   if ':' in w}
+
+
+def _fence_expectations(body):
+    """Per chapter: (mermaid diagrams, language badges, highlighted blocks)."""
+    langs = [m.group(1) for m in re.finditer(r'^```(\S+)\s*$', body, flags=re.MULTILINE)]
+    mermaids = sum(1 for lang in langs if lang.lower() == 'mermaid')
+    badges = sum(1 for lang in langs if lang.lower() not in PLAIN_LANGS)
+    highlights = sum(1 for lang in langs if lang.lower() in HIGHLIGHT_LANGS)
+    return mermaids, badges, highlights
 
 
 def main():
@@ -24,7 +44,7 @@ def main():
         if WebHelpBrowser is None or not isinstance(page.browser, WebHelpBrowser):
             report.update(passed=None, renderer='text-fallback',
                           errors=['WebEngine 未启用（offscreen 或缺少 help_assets）'])
-            print('SKIP：当前环境回退到纯文本帮助，未验证 Mermaid 渲染。')
+            print('SKIP：当前环境回退到纯文本帮助，未验证渲染。')
             out.write_text(json.dumps(report, ensure_ascii=False, indent=1), encoding='utf-8')
             return 0
 
@@ -47,18 +67,31 @@ def main():
         for row in range(page.contents.count()):
             item = page.contents.item(row)
             body = item.data(0x0100)  # QtCore.Qt.UserRole
-            expected = len(re.findall(r'^```mermaid$', body, flags=re.MULTILINE))
-            if not expected:
+            diagrams, badges, highlights = _fence_expectations(body)
+            if not (diagrams or badges or highlights):
                 continue
             page.contents.setCurrentRow(row)
             until(lambda: evaluate("document.readyState") == 'complete')
-            until(lambda: evaluate("document.querySelectorAll('pre.mermaid svg').length") == expected,
-                  seconds=40)
+            if diagrams:
+                until(lambda: evaluate(
+                    "document.querySelectorAll('pre.mermaid svg').length") == diagrams,
+                    seconds=40)
             broken = evaluate("document.querySelectorAll('pre.mermaid.mermaid-error').length")
-            report['chapters'].append(dict(title=item.text(), diagrams=expected, errors=broken))
+            got_badges = evaluate("document.querySelectorAll('pre[data-lang]').length")
+            got_highlights = evaluate(
+                "document.querySelectorAll('pre code.hljs[data-highlighted=yes]').length")
+            report['chapters'].append(dict(title=item.text(), diagrams=diagrams,
+                                           badges=got_badges, highlighted=got_highlights,
+                                           errors=broken))
             if broken:
                 report['errors'].append(f"{item.text()}：{broken} 张图渲染失败")
-            print(f"章节《{item.text()}》 mermaid={expected} 失败={broken}", flush=True)
+            if got_badges != badges:
+                report['errors'].append(f"{item.text()}：徽标 {got_badges} 个，应为 {badges} 个")
+            if got_highlights != highlights:
+                report['errors'].append(
+                    f"{item.text()}：高亮 {got_highlights} 块，应为 {highlights} 块")
+            print(f"章节《{item.text()}》 mermaid={diagrams} 徽标={got_badges}/{badges} "
+                  f"高亮={got_highlights}/{highlights} 失败={broken}", flush=True)
 
         for index in range(dialog.tabs.count()):
             dialog.tabs.setCurrentIndex(index)
