@@ -1,9 +1,149 @@
-"""Searchable offline help, using the same Markdown files as the developer docs."""
+"""Searchable offline help, using the same Markdown files as the developer docs.
+
+Chapters render in a local QtWebEngine page with marked + mermaid from
+``emg_lab/help_assets`` (fully offline), so the Mermaid diagrams in the guides
+draw as SVG.  When QtWebEngine or those scripts are unavailable — for example
+offscreen test runs — the same chapters fall back to a plain QTextBrowser
+where Mermaid blocks show as code.
+"""
 from pathlib import Path
+import html as html_lib
+import json
 import re
 from PySide6 import QtCore, QtGui, QtWidgets as W
 
 from .storage import ROOT
+
+ASSETS = Path(__file__).resolve().parent / 'help_assets'
+
+PAGE_TEMPLATE = """<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" href="help.css">
+<script src="marked.min.js"></script>
+<script src="mermaid.min.js"></script>
+</head>
+<body>
+<div id="content"></div>
+<script>
+(function () {
+  var source = __PAYLOAD__;
+  var host = document.getElementById('content');
+  if (typeof marked === 'undefined') {
+    var pre = document.createElement('pre');
+    pre.textContent = source;
+    host.appendChild(pre);
+    return;
+  }
+  host.innerHTML = marked.parse(source);
+  if (typeof mermaid === 'undefined') return;
+  var graphs = [];
+  host.querySelectorAll('code.language-mermaid').forEach(function (el) {
+    var div = document.createElement('pre');
+    div.className = 'mermaid';
+    div.textContent = el.textContent;
+    el.parentElement.replaceWith(div);
+    graphs.push(div);
+  });
+  if (!graphs.length) return;
+  mermaid.initialize({ startOnLoad: false, theme: 'default',
+    fontFamily: '"Microsoft YaHei UI", "Microsoft YaHei", sans-serif' });
+  mermaid.run({ nodes: graphs }).catch(function (err) {
+    graphs.forEach(function (node) {
+      if (node.querySelector('svg')) return;
+      node.classList.add('mermaid-error');
+      node.textContent = 'Mermaid 渲染失败：' + (err && err.message ? err.message : err);
+    });
+  });
+})();
+</script>
+</body>
+</html>
+"""
+
+try:
+    from PySide6 import QtWebEngineCore, QtWebEngineWidgets
+except Exception:  # pragma: no cover - PySide6 Addons missing on exotic installs
+    QtWebEngineCore = QtWebEngineWidgets = None
+
+
+def _webengine_available():
+    """QtWebEngine is used only on interactive platforms with local scripts."""
+    if QtWebEngineWidgets is None or QtWebEngineCore is None:
+        return False
+    app = W.QApplication.instance()
+    if app is not None and app.platformName() == 'offscreen':
+        return False
+    return ((ASSETS / 'marked.min.js').exists()
+            and (ASSETS / 'mermaid.min.js').exists())
+
+
+def _chapter_html(markdown):
+    payload = json.dumps(markdown).replace('</', '<\\/')
+    return PAGE_TEMPLATE.replace('__PAYLOAD__', payload)
+
+
+class TextHelpBrowser(W.QTextBrowser):
+    """Fallback renderer: Mermaid fences display as plain code blocks."""
+
+    def __init__(self, parent=None):
+        super().__init__(parent)
+        self.setOpenLinks(False)
+        self.setOpenExternalLinks(False)
+        self.document().setDocumentMargin(12)
+        self.document().setDefaultStyleSheet(
+            'h1,h2,h3 {color:#2149b8;} p,li {line-height:150%;} '
+            'pre {background:#edf2f5;white-space:pre-wrap;} '
+            'th,td {padding:6px;}')
+
+    def show_markdown(self, text):
+        self.setMarkdown(text)
+        cursor = QtGui.QTextCursor(self.document())
+        cursor.select(QtGui.QTextCursor.Document)
+        spacing = QtGui.QTextBlockFormat()
+        spacing.setLineHeight(140, QtGui.QTextBlockFormat.ProportionalHeight.value)
+        spacing.setBottomMargin(8)
+        cursor.mergeBlockFormat(spacing)
+        self.verticalScrollBar().setValue(0)
+
+    def show_message(self, text):
+        self.setPlainText(text)
+
+
+if QtWebEngineWidgets is not None:
+    class HelpWebPage(QtWebEngineCore.QWebEnginePage):
+        """External links open in the desktop browser; other navigation stays local."""
+
+        def acceptNavigationRequest(self, url, kind, is_main_frame):
+            if url.scheme() in ('http', 'https'):
+                QtGui.QDesktopServices.openUrl(url)
+                return False
+            if (kind == QtWebEngineCore.QWebEnginePage.NavigationType.NavigationTypeLinkClicked
+                    and url.toLocalFile().lower().endswith('.md')):
+                return False  # 与旧版一致：跨文档 .md 链接在离线帮助中不跳转
+            return True
+
+        def createWindow(self, kind):
+            return None
+
+    class WebHelpBrowser(QtWebEngineWidgets.QWebEngineView):
+        """Offline HTML renderer driven by help_assets (marked + mermaid)."""
+
+        def __init__(self, parent=None):
+            super().__init__(parent)
+            self.setPage(HelpWebPage(self))
+            self._base = QtCore.QUrl.fromLocalFile(
+                str(ASSETS).replace('\\', '/') + '/')
+
+        def show_markdown(self, text):
+            self.setHtml(_chapter_html(text), self._base)
+
+        def show_message(self, text):
+            body = '<body style="font-family:\'Microsoft YaHei UI\',sans-serif;">%s</body>'
+            self.setHtml(body % html_lib.escape(text), self._base)
+else:  # pragma: no cover - keeps GuidePage usable when WebEngine is missing
+    WebHelpBrowser = None
 
 
 class GuidePage(W.QWidget):
@@ -26,14 +166,10 @@ class GuidePage(W.QWidget):
         self.contents = W.QListWidget()
         self.contents.setMinimumWidth(190)
         self.contents.setWordWrap(True)
-        self.browser = W.QTextBrowser()
-        self.browser.document().setDocumentMargin(12)
-        self.browser.setOpenLinks(False)
-        self.browser.setOpenExternalLinks(False)
-        self.browser.document().setDefaultStyleSheet(
-            'h1,h2,h3 {color:#2149b8;} p,li {line-height:150%;} '
-            'pre {background:#edf2f5;white-space:pre-wrap;} '
-            'th,td {padding:6px;}')
+        self.browser = (WebHelpBrowser() if _webengine_available()
+                        else TextHelpBrowser())
+        if isinstance(self.browser, TextHelpBrowser):
+            self.browser.anchorClicked.connect(self.open_link)
         split.addWidget(self.contents)
         split.addWidget(self.browser)
         split.setStretchFactor(1, 1)
@@ -41,7 +177,6 @@ class GuidePage(W.QWidget):
         layout.addWidget(split, 1)
         self.contents.currentItemChanged.connect(self.show_chapter)
         self.search.textChanged.connect(self.filter_chapters)
-        self.browser.anchorClicked.connect(self.open_link)
         self.filter_chapters('')
 
     def filter_chapters(self, text):
@@ -54,18 +189,13 @@ class GuidePage(W.QWidget):
         if self.contents.count():
             self.contents.setCurrentRow(0)
         else:
-            self.browser.setPlainText('没有找到相关章节。请尝试“导入”“采集”“模型”或清空搜索。')
+            self.browser.show_message('没有找到相关章节。请尝试“导入”“采集”“模型”或清空搜索。')
 
     def show_chapter(self, item, previous=None):
         if item:
-            self.browser.setMarkdown(item.data(QtCore.Qt.UserRole))
-            cursor = QtGui.QTextCursor(self.browser.document())
-            cursor.select(QtGui.QTextCursor.Document)
-            spacing = QtGui.QTextBlockFormat()
-            spacing.setLineHeight(140, QtGui.QTextBlockFormat.ProportionalHeight.value)
-            spacing.setBottomMargin(8)
-            cursor.mergeBlockFormat(spacing)
-            self.browser.verticalScrollBar().setValue(0)
+            self.browser.show_markdown(item.data(QtCore.Qt.UserRole))
+            if isinstance(self.browser, TextHelpBrowser):
+                self.browser.verticalScrollBar().setValue(0)
 
     def open_link(self, url):
         if url.scheme() in ('http', 'https'):

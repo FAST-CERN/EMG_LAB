@@ -164,5 +164,12 @@
       "合成示例元数据移除本机绝对路径，保持原始训练源码指纹。",
       "清理个人数据、环境、日志和凭据，完整运行环境通过本地离线包分发。"
     ]
+  },
+  "help_mermaid_20261027": {
+    "date": "2026-10-27",
+    "implementation": "emg_lab/help.py renders guide chapters in QtWebEngine; QTextBrowser fallback when WebEngine or assets are unavailable (e.g. offscreen tests)",
+    "assets": "emg_lab/help_assets (marked 18.1.2 UMD-min, mermaid 12.2.0 dist, project-authored help.css)",
+    "license_and_hashes": "licenses/help-js/README.md",
+    "reason": "docs/TECHNICAL_GUIDE.md architecture diagrams moved to Mermaid fences; render them as SVG in the offline F1 help"
   }
 }

@@ -1,0 +1,56 @@
+/* Offline help page styling, matched to emg_lab/theme.py (YaHei UI, #17243c ink,
+   #2149b8 headings, #edf2f5 panels). */
+:root {
+  --ink: #17243c;
+  --accent: #2149b8;
+  --panel: #edf2f5;
+  --line: #d8e0ea;
+}
+html, body { margin: 0; padding: 0; background: #fff; }
+body {
+  font-family: "Microsoft YaHei UI", "Microsoft YaHei", system-ui, sans-serif;
+  font-size: 14px;
+  color: var(--ink);
+  line-height: 1.65;
+  padding: 14px 20px 36px;
+}
+h1, h2, h3, h4 { color: var(--accent); line-height: 1.35; }
+h1 { font-size: 22px; margin: 18px 0 12px; }
+h2 { font-size: 19px; margin: 22px 0 10px; border-bottom: 1px solid var(--line); padding-bottom: 4px; }
+h3 { font-size: 16px; margin: 16px 0 8px; }
+h4 { font-size: 15px; margin: 12px 0 6px; }
+p { margin: 8px 0; }
+ul, ol { margin: 8px 0; padding-left: 26px; }
+li { margin: 3px 0; }
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; }
+code {
+  font-family: Consolas, "Courier New", monospace;
+  font-size: 13px;
+  background: var(--panel);
+  padding: 1px 5px;
+  border-radius: 3px;
+}
+pre {
+  background: var(--panel);
+  padding: 10px 12px;
+  border-radius: 6px;
+  overflow-x: auto;
+}
+pre code { background: none; padding: 0; font-size: 13px; }
+table { border-collapse: collapse; margin: 10px 0; }
+th, td { border: 1px solid var(--line); padding: 6px 10px; text-align: left; }
+th { background: var(--panel); }
+blockquote {
+  border-left: 3px solid var(--line);
+  margin: 8px 0;
+  padding: 2px 12px;
+  color: #4a5a74;
+}
+hr { border: none; border-top: 1px solid var(--line); margin: 16px 0; }
+img { max-width: 100%; }
+
+/* Mermaid diagrams render centered on white, without the code-panel chrome. */
+pre.mermaid { background: #fff; text-align: center; overflow-x: auto; }
+pre.mermaid svg { max-width: 100%; height: auto; }
+pre.mermaid.mermaid-error { color: #b00020; text-align: left; white-space: pre-wrap; }

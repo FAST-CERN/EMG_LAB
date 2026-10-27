@@ -82,11 +82,10 @@
 
 ```powershell
 ..\..\.venv\Scripts\python.exe ..\..\scripts\control_study\sweep.py --output axis_sweep.json
-..\..\.venv\Scripts\python.exe ..\..\scripts\control_studyalidate_candidates.py
-..\..\.venv\Scripts\python.exe ..\..\scripts\control_studyinal_validation.py
+..\..\.venv\Scripts\python.exe ..\..\scripts\control_study\validate_candidates.py
+..\..\.venv\Scripts\python.exe ..\..\scripts\control_study\final_validation.py
 ..\..\.venv\Scripts\python.exe ..\..\scripts\control_study\extra_validation.py
-..\..\.venv\Scripts\python.exe ..\..\scripts\control_study
-oute_validation.py
+..\..\.venv\Scripts\python.exe ..\..\scripts\control_study\route_validation.py
 ```
 
 复现结果可能因依赖、CPU 和接触数值细节出现小幅差异；最初探索记录保存的是升级前源代码哈希，策略权重与物理主链相同。候选脚本现在使用修正后的接触摩擦设置，复跑候选结果不会逐项等于历史文件。正式定版建议再用人工键盘与实际肌电各跑几局，重点确认反应延迟、停止手感和低幅控制，再冻结期末规则。

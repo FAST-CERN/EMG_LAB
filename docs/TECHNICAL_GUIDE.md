@@ -6,30 +6,39 @@
 
 ## 1 系统整体链路
 
-```text
-main.py → app.MainWindow（Qt 主线程，四步实验 + 数据与模型）
-  │
-  ├─ DeviceProcess → device_worker（独立 Python 子进程）
-  │    ├─ 模拟设备：每 20 ms 生成一块信号
-  │    ├─ Cometa SDK：.NET Framework
-  │    └─ Delsys SDK：.NET 8 / CoreCLR
-  │             │ JSON Lines + base64 float32
-  │             ▼
-  ├─ engine.Session.feed(raw[N,C])
-  │    ├─ SignalFilter → 波形预览（最多保留最近 10 秒）
-  │    ├─ CaptureRun → 原始信号 + 样本索引标签 → .emg
-  │    └─ InferencePipeline
-  │         因果滤波 → 滑窗[1,C,W] → ONNX logits
-  │         → softmax → StableCommand → 最终离散指令
-  │                       ├─ CSV/JSON 推理日志
-  │                       ├─ 机器人 MuJoCo + 预训练运控
-  │                       ├─ 灵巧手运动学 3D 显示
-  │                       └─ 显式启用的真实 DDS / USB 输出
-  │
-  └─ 训练请求 JSON → train_worker（独立子进程）
-       .emg → 完整 trial 划分 → 滤波/切窗 → 训练集标准化
-       → LiteCNN1D 训练 → ONNX 导出 → 数值一致性检查
-       → 留出数据连续回放评估 → metadata.json
+```mermaid
+flowchart TD
+    main["main.py → app.MainWindow<br/>Qt 主线程，四步实验 + 数据与模型"]
+
+    subgraph worker["device_worker（独立 Python 子进程）"]
+        sim["模拟设备<br/>每 20 ms 生成一块信号"]
+        cometa["Cometa SDK<br/>.NET Framework"]
+        delsys["Delsys SDK<br/>.NET 8 / CoreCLR"]
+    end
+
+    main -->|"启动"| dp["DeviceProcess<br/>JSON Lines 子进程通信"]
+    dp -->|"运行"| worker
+    worker -->|"frame：seq / captured_at / shape=[N,C]<br/>base64 小端 float32"| session["engine.Session.feed(raw[N,C])"]
+
+    replay[".emg 文件回放<br/>约 20 ms 数据块"] --> session
+
+    session --> preview["SignalFilter → 波形预览<br/>最多保留最近 10 秒"]
+    session --> capture["CaptureRun → 原始信号 + 样本索引标签 → .emg"]
+    session --> pipe["InferencePipeline"]
+
+    pipe --> s1["因果滤波"] --> s2["滑窗 [1,C,W]"] --> s3["ONNX logits"] --> s4["softmax"] --> s5["StableCommand<br/>最终离散指令"]
+
+    s5 --> o1["CSV/JSON 推理日志"]
+    s5 --> o2["机器人 MuJoCo + 预训练运控"]
+    s5 --> o3["灵巧手运动学 3D 显示"]
+    s5 --> o4["显式启用的真实 DDS / USB 输出"]
+
+    main -->|"训练请求 JSON"| tw["train_worker<br/>独立子进程"]
+    tw --> t1[".emg → 完整 trial 划分"]
+    t1 --> t2["滤波/切窗 → 训练集标准化"]
+    t2 --> t3["LiteCNN1D 训练 → ONNX 导出<br/>→ 数值一致性检查"]
+    t3 --> t4["留出数据连续回放评估"]
+    t4 --> t5["metadata.json"]
 ```
 
 文件回放从 `.emg` 读出原始信号，以约 20 ms 的数据块进入同一个 `Session.feed`。预览、保存和推理各自有职责；保存的是原始信号，不能把预览滤波后的波形再交给推理滤波一次。
@@ -46,7 +55,8 @@ emg_classroom_demo/
 │  ├─ app.py                    页面、控件、流程编排
 │  ├─ theme.py / widgets.py     统一主题、分区与字段布局
 │  ├─ icons/                    界面下拉与数值调节图标
-│  ├─ help.py                   可搜索的离线帮助窗口
+│  ├─ help.py                   可搜索的离线帮助窗口，WebEngine 渲染 Mermaid 图，缺组件时回退纯文本
+│  ├─ help_assets/              帮助页本地 marked、mermaid 脚本与样式
 │  ├─ library.py                统一数据/模型管理页、筛选与用途跳转
 │  ├─ catalog.py                文件目录、跨目标传输、离线实验包与清单
 │  ├─ transfer.py               持久导入、打包导出、完整性检查
@@ -240,18 +250,18 @@ print(labels[0])           # 半开区间标签
 
 `network.LiteCNN1D` 的架构标记是 `LiteCNN1D_channels_v2`：
 
-```text
-输入 [B,C,W]
-→ Conv1d(C,C,k=1)                     保留通道维度
-→ Conv1d(C,16,k=1)
-→ GroupNorm(4,16) → Mish
-→ MaxPool1d(2,2) → Dropout(0.1)
-→ Conv1d(16,32,k=3,padding=2,dilation=2)
-→ GroupNorm(4,32) → Mish
-→ MaxPool1d(2,2) → Dropout(0.1)
-→ 对时间维做全局平均 [B,32]
-→ Linear(32,K)                       K=4 或 3
-→ logits [B,K]
+```mermaid
+flowchart TD
+    in["输入 [B,C,W]"] --> p1["Conv1d(C,C,k=1)<br/>保留通道维度"]
+    p1 --> c1["Conv1d(C,16,k=1)"]
+    c1 --> c2["GroupNorm(4,16) → Mish"]
+    c2 --> c3["MaxPool1d(2,2) → Dropout(0.1)"]
+    c3 --> c4["Conv1d(16,32,k=3,padding=2,dilation=2)<br/>空洞卷积块"]
+    c4 --> c5["GroupNorm(4,32) → Mish"]
+    c5 --> c6["MaxPool1d(2,2) → Dropout(0.1)"]
+    c6 --> g["对时间维做全局平均 → [B,32]"]
+    g --> fc["Linear(32,K)<br/>K=4 或 3"]
+    fc --> out["logits [B,K]"]
 ```
 
 首层是 C→C，避免在非线性特征提取前就把两块独立肌肉压成一个通道。模型输出是 logits，softmax 由推理层完成。
@@ -385,7 +395,14 @@ model_result = import_model(model_file, another_data_root, ROBOT)
 实时与回放调用同一 `RobotScene.start('open')`；区别只在 `Session` 的输入。`SceneWindow.source` 仅影响标题和说明，不参与场景文件选择。采集调用 `start('sample')`，按预设标签增加地面动作提示。两种推理都由 `InferencePipeline` 的稳定指令驱动机器人，回放标签不作为控制输入。当前基础场景标识为 `g1_outdoor_15m_v1`。新增金币模式使用同一机器人和物理场景，增加无碰撞金币、确定性路线和独立计分；接口详见 `COMPETITION.md`。
 
 
-机器人链路为：离散指令 → 目标速度 → 预训练 Balance/Walk 策略 → 关节力矩 → MuJoCo 物理仿真。策略为 50 Hz，物理为 200 Hz；默认前进 0.6 m/s、原地转向 1.0 rad/s。渲染独立按约 25 FPS 调度。超过 0.75 秒未收到新指令时虚拟机器人停止。
+机器人链路（策略 50 Hz、物理 200 Hz、渲染约 25 FPS）：
+
+```mermaid
+flowchart LR
+    cmd["最终离散指令<br/>超过 0.75 秒无新指令即停止"] --> vel["目标速度<br/>默认前进 0.6 m/s，原地转向 1.0 rad/s"]
+    vel --> policy["预训练 Balance/Walk 策略<br/>50 Hz"] --> torque["关节力矩"] --> mj["MuJoCo 物理仿真<br/>200 Hz"]
+    mj -.->|"状态回传，UI 只接收 QImage"| render["场景渲染<br/>约 25 FPS，独立调度"]
+```
 
 灵巧手使用官方 Revo2 左手模型和 mimic 关系做运动学显示。四指归一化开合速度 75%/秒，张开趋近 0%，握合趋近 100%，停止保持当前位置；拇指固定 FLEX 24°、AUX 30°。该画面没有实现接触力或物体抓取仿真。
 
@@ -417,12 +434,13 @@ model_result = import_model(model_file, another_data_root, ROBOT)
 .\.venv\Scripts\python.exe -m scripts.check_ui --physics
 .\.venv\Scripts\python.exe -m scripts.check_hand_ui
 .\.venv\Scripts\python.exe -m scripts.check_dds
+.\.venv\Scripts\python.exe -m scripts.check_help
 
 # 专项验证
 .\.venv\Scripts\python.exe -m pytest -q tests/test_transfer.py tests/test_student_features.py
 ```
 
-`check_ui --physics` 验证机器人实际界面、采集、训练、实时解码、回放和退出；`check_hand_ui` 使用默认 5 组并验证三分类、3D、停止保持和回放；`check_dds` 只使用 loopback、Domain 153。
+`check_ui --physics` 验证机器人实际界面、采集、训练、实时解码、回放和退出；`check_hand_ui` 使用默认 5 组并验证三分类、3D、停止保持和回放；`check_dds` 只使用 loopback、Domain 153；`check_help` 在桌面会话验证帮助窗口的 Mermaid 渲染与四个标签页加载，报告写入 `local/help-check.json`。
 
 | 问题 | 先看哪里 |
 | --- | --- |
