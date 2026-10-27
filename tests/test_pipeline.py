@@ -83,6 +83,7 @@ def test_dds_guard_timeout_and_shutdown():
     assert adapter.closed and adapter.sent[-1]['filtered_class']==0
 
 
+@pytest.mark.skipif(sys.platform!='win32',reason='真机机器人链（bsi_robot_base wheel）为 Windows 全功能档专属，见 ADR 0002')
 def test_original_adapter_wire_mapping_without_broadcast():
     from bsi_robot_base import UnitreeDdsHumanoidRobotAdapter
     class Publisher:
