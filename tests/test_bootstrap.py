@@ -1,17 +1,20 @@
 """安装链平台契约：win32 全功能档、darwin 模拟开发档（ADR 0002）、win 专属依赖行环境标记。"""
 from pathlib import Path
-import importlib.util,platform,sys
+import importlib.util,json,platform,sys
 import pytest
 from packaging.markers import Marker
 
 ROOT=Path(__file__).resolve().parents[1]
 
-@pytest.fixture
-def bootstrap():
-    spec=importlib.util.spec_from_file_location('bootstrap',ROOT/'scripts/bootstrap.py')
+def load_script(name):
+    spec=importlib.util.spec_from_file_location(name,ROOT/'scripts'/(name+'.py'))
     module=importlib.util.module_from_spec(spec)
     spec.loader.exec_module(module)
     return module
+
+@pytest.fixture
+def bootstrap():
+    return load_script('bootstrap')
 
 def become(monkeypatch,name,machine='arm64',version=(3,13,5,'final',0)):
     monkeypatch.setattr(sys,'platform',name)
@@ -96,3 +99,13 @@ def test_darwin_install_set_keeps_simulation_deps_only():
     for keep in ('PySide6>=6.8,<7','numpy>=2.1,<3','onnxruntime>=1.23,<2','mujoco>=3.3,<4',
                  'torch>=2.6,<3','pillow>=10,<13','pyusb==1.3.1','libusb-package==1.0.30.0','pytest==9.1.1'):
         assert keep in active,keep
+
+def test_revo2_manifest_keys_resolve_across_separators():
+    # provenance.json 的键由 Windows 写入（\）；POSIX 上必须归一化后与 / 写法定位到同一文件。
+    check_hand_assets=load_script('check_hand_assets')
+    manifest=json.loads((ROOT/'assets/revo2/provenance.json').read_text(encoding='utf-8'))
+    assets=ROOT/'assets/revo2'
+    for name in manifest['files']:
+        posix=name.replace('\\','/')
+        assert check_hand_assets.resolve_asset(assets,name)==check_hand_assets.resolve_asset(assets,posix),name
+        assert check_hand_assets.resolve_asset(assets,posix).is_file(),name

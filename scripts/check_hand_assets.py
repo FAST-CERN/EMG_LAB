@@ -7,11 +7,16 @@ import sys
 ROOT=Path(__file__).resolve().parents[1]
 
 
+def resolve_asset(assets,name):
+    """Manifest keys are written on Windows; accept both separators on any platform."""
+    return assets.joinpath(*name.replace('\\','/').split('/'))
+
+
 def main():
     assets=ROOT/'assets/revo2'
     manifest=json.loads((assets/'provenance.json').read_text(encoding='utf-8'))
     for name,digest in manifest['files'].items():
-        path=assets/name
+        path=resolve_asset(assets,name)
         if not path.is_file() or hashlib.sha256(path.read_bytes()).hexdigest()!=digest:
             raise ValueError(f'Revo2 asset is missing or changed: {name}')
     if not (ROOT/'licenses/Revo2-Apache-2.0.txt').is_file():
