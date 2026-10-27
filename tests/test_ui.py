@@ -1,6 +1,7 @@
 """Student-facing regressions; no real device or DDS participant is created."""
 import os
 os.environ.setdefault('QT_QPA_PLATFORM','offscreen')
+import sys
 import pytest
 import numpy as np
 from PySide6 import QtWidgets as W
@@ -127,3 +128,48 @@ def test_cached_prediction_does_not_refresh_robot_watchdog(window, profile, monk
     window.session.result = dict(sample_end=600, filtered_class=0, probabilities=[1.,0.,0.,0.])
     window.tick()
     assert sent == [3, 0]
+
+
+FULL_DEVICES=[('Cometa','Cometa'),('Delsys','Delsys'),('模拟设备（无需硬件）','模拟练习')]
+
+
+def test_available_devices_by_platform():
+    from emg_lab.app import available_devices
+    assert available_devices('win32')==FULL_DEVICES
+    assert available_devices('darwin')==[FULL_DEVICES[-1]]
+
+
+@pytest.fixture
+def platform_window(tmp_path,monkeypatch):
+    built=[]
+    def build(platform_name):
+        monkeypatch.setattr(sys,'platform',platform_name)
+        app=W.QApplication.instance() or W.QApplication([]); configure_app(app)
+        window=MainWindow(tmp_path); window.timer.stop(); built.append(window)
+        return window
+    yield build
+    app=W.QApplication.instance()
+    for window in built: window.close()
+    if app is not None: app.processEvents()
+
+
+def test_device_dropdown_keeps_full_list_on_win32(platform_window):
+    window=platform_window('win32')
+    items=[(window.device_combo.itemText(i),window.device_combo.itemData(i)) for i in range(window.device_combo.count())]
+    assert items==FULL_DEVICES
+
+
+def test_device_dropdown_darwin_shows_mock_only(platform_window):
+    window=platform_window('darwin')
+    assert window.device_combo.count()==1
+    assert window.device_combo.itemData(0)=='模拟练习'
+    assert window.delsys_panel.isHidden()
+
+
+def test_connect_dds_without_real_machine_stack_shows_error(platform_window,monkeypatch):
+    monkeypatch.setitem(sys.modules,'bsi_robot_base',None)
+    window=platform_window('win32')
+    window.select_task('robot')
+    window.guard(window.connect_dds)
+    assert window.notice.property('tone')=='error'
+    assert 'bsi_robot_base' in window.notice.text()

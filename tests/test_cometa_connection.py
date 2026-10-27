@@ -1,6 +1,11 @@
 """Regression tests for SDK connection failures; never access a real DAQ."""
+import sys
 from unittest.mock import Mock
 import pytest
+
+if sys.platform!='win32':
+    pytest.skip('真机采集链（pythonnet + Cometa SDK）为 Windows 全功能档专属，见 ADR 0002',allow_module_level=True)
+
 from vendor.cometa import cometa_emg as module
 
 

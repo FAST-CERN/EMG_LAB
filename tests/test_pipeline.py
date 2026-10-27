@@ -1,5 +1,9 @@
 import threading
 import time
+import json
+import subprocess
+import sys
+from pathlib import Path
 import numpy as np
 import pytest
 from emg_lab.inference import InferencePipeline,StableCommand
@@ -108,3 +112,15 @@ def test_mock_device_subprocess_connect_stream_and_shutdown():
     finally:
         process.close()
     assert process.process.poll() is not None
+
+
+def test_worker_missing_sdk_reports_error_and_closes_cleanly():
+    # darwin 不装真机 SDK（依赖带环境标记）；worker 必须以 error/closed 协议事件退出，而不是裸崩。
+    code=("import sys;sys.modules['vendor']=None;"
+          "import json;sys.argv=['device_worker',json.dumps(dict(device='Cometa',channel_ids=[1,2,3,4]))];"
+          "from emg_lab.device_worker import main;main()")
+    result=subprocess.run([sys.executable,'-c',code],cwd=Path(__file__).resolve().parents[1],
+                          capture_output=True,text=True,timeout=60)
+    events=[json.loads(line) for line in result.stdout.splitlines()]
+    assert [event['type'] for event in events]==['error','closed']
+    assert 'vendor' in events[0]['message']

@@ -90,6 +90,12 @@ def device_name(value):
     return '模拟设备' if value=='模拟练习' else value
 
 
+def available_devices(platform_name=None):
+    """真机设备仅 Windows 全功能档可见（ADR 0002）；其余平台只提供模拟练习。"""
+    devices=[('Cometa','Cometa'),('Delsys','Delsys'),('模拟设备（无需硬件）','模拟练习')]
+    return devices if (platform_name or sys.platform)=='win32' else [devices[-1]]
+
+
 class MainWindow(W.QMainWindow):
     def __init__(self, data_root=DATA_ROOT):
         super().__init__()
@@ -271,7 +277,7 @@ class MainWindow(W.QMainWindow):
         layout = self.page('01  设备连接','连接肌电设备','选择设备并填写传感器编号。没有硬件时，选择“模拟设备”即可开始。')
         panel, body = card('设备配置')
         self.device_combo = W.QComboBox()
-        for text,value in [('Cometa','Cometa'),('Delsys','Delsys'),('模拟设备（无需硬件）','模拟练习')]:
+        for text,value in available_devices():
             self.device_combo.addItem(text,value)
         self.device_combo.currentIndexChanged.connect(self.update_controls)
         self.channels = W.QLineEdit('1,2,3,4')
