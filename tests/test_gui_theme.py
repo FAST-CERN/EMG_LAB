@@ -1,8 +1,9 @@
 """Visibility regressions for the classroom's essential configuration."""
 import os
 os.environ.setdefault('QT_QPA_PLATFORM', 'offscreen')
+import sys
 import numpy as np
-from PySide6 import QtCore as C, QtWidgets as W
+from PySide6 import QtCore as C, QtGui, QtWidgets as W
 from emg_lab.app import MainWindow, configure_app
 
 
@@ -69,3 +70,15 @@ def test_essential_fields_do_not_depend_on_advanced_toggles(tmp_path):
         w.help_dialog.close()
     finally:
         w.close()
+
+
+def test_app_font_family_follows_platform(monkeypatch):
+    from emg_lab.theme import apply_theme
+    app = W.QApplication.instance() or W.QApplication([])
+    app.setFont(QtGui.QFont('Helvetica', 10))
+    monkeypatch.setattr(sys, 'platform', 'darwin')
+    apply_theme(app)
+    assert app.font().family() == 'Helvetica', '非 win32 不得指定 Windows 字族'
+    monkeypatch.setattr(sys, 'platform', 'win32')
+    apply_theme(app)
+    assert app.font().family() == 'Microsoft YaHei UI'

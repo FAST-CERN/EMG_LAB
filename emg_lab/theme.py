@@ -1,5 +1,6 @@
 """Shared visual tokens for the classroom windows and offline help."""
 import os
+import sys
 from pathlib import Path
 from PySide6 import QtGui
 
@@ -8,7 +9,9 @@ def apply_theme(app):
     font_path = Path(os.environ.get('WINDIR', 'C:/Windows')) / 'Fonts' / 'msyh.ttc'
     if font_path.exists():
         QtGui.QFontDatabase.addApplicationFont(str(font_path))
-    app.setFont(QtGui.QFont('Microsoft YaHei UI', 10))
+    if sys.platform == 'win32':
+        # YaHei 只随 Windows 提供；其他平台沿用系统默认字体，避免为缺失字族付启动开销。
+        app.setFont(QtGui.QFont('Microsoft YaHei UI', 10))
     app.setStyle('Fusion')
     palette = QtGui.QPalette()
     for role, color in (
