@@ -1,0 +1,156 @@
+{
+  "axis_sweep": {
+    "cases": 123,
+    "stable": 121,
+    "stop_ok": 103,
+    "max_tilt": 55.39337669008203,
+    "min_height": 0.4177563842025252
+  },
+  "candidate_validation": {
+    "cases": 204,
+    "stable": 204,
+    "stop_ok": 203,
+    "max_tilt": 12.085692898398612,
+    "min_height": 0.7217872192465097
+  },
+  "final_validation": {
+    "cases": 194,
+    "stable": 194,
+    "stop_ok": 194,
+    "max_tilt": 12.694318738017325,
+    "min_height": 0.7196286706739164
+  },
+  "fixed_tier_validation": {
+    "cases": 84,
+    "stable": 84,
+    "stop_ok": 84,
+    "max_tilt": 10.900013515038605,
+    "min_height": 0.7305099843812568
+  },
+  "route_validation": {
+    "basic": {
+      "cases": 20,
+      "completed": 20,
+      "mean_seconds": 40.088,
+      "min_seconds": 36.92,
+      "max_seconds": 43.18
+    },
+    "advanced": {
+      "cases": 20,
+      "completed": 20,
+      "mean_seconds": 32.82,
+      "min_seconds": 29.74,
+      "max_seconds": 35.68
+    }
+  },
+  "axis": [
+    {
+      "tier": "basic",
+      "class_id": 1,
+      "request": 1.0,
+      "actual": 0.9692860501022267,
+      "stop_drift": 0.028012098261391803,
+      "stop_seconds": 0.74,
+      "stop_yaw": 12.749075593720594
+    },
+    {
+      "tier": "basic",
+      "class_id": 2,
+      "request": -1.0,
+      "actual": -1.0034990497600964,
+      "stop_drift": 0.027478156176651936,
+      "stop_seconds": 0.84,
+      "stop_yaw": 14.509757960256753
+    },
+    {
+      "tier": "basic",
+      "class_id": 3,
+      "request": 0.6,
+      "actual": 0.5528253046732542,
+      "stop_drift": 0.2757634065627401,
+      "stop_seconds": 1.08,
+      "stop_yaw": 2.874425101982091
+    },
+    {
+      "tier": "basic",
+      "class_id": 4,
+      "request": -0.4,
+      "actual": -0.3862702300938465,
+      "stop_drift": 0.17630358941090554,
+      "stop_seconds": 0.96,
+      "stop_yaw": 2.367492996729948
+    },
+    {
+      "tier": "basic",
+      "class_id": 5,
+      "request": 0.4,
+      "actual": 0.28422430888317535,
+      "stop_drift": 0.027576915369253226,
+      "stop_seconds": 0.5,
+      "stop_yaw": 1.900698179941925
+    },
+    {
+      "tier": "basic",
+      "class_id": 6,
+      "request": -0.4,
+      "actual": -0.2974160368933706,
+      "stop_drift": 0.035866016896374336,
+      "stop_seconds": 0.5,
+      "stop_yaw": 1.3215443662210176
+    },
+    {
+      "tier": "advanced",
+      "class_id": 1,
+      "request": 1.2,
+      "actual": 1.1687978702151605,
+      "stop_drift": 0.033332722857536114,
+      "stop_seconds": 0.8,
+      "stop_yaw": 17.839202960508146
+    },
+    {
+      "tier": "advanced",
+      "class_id": 2,
+      "request": -1.2,
+      "actual": -1.1929018722001015,
+      "stop_drift": 0.03878608466702121,
+      "stop_seconds": 0.8200000000000001,
+      "stop_yaw": 17.233750196389025
+    },
+    {
+      "tier": "advanced",
+      "class_id": 3,
+      "request": 0.8,
+      "actual": 0.752278459552311,
+      "stop_drift": 0.4578303536792958,
+      "stop_seconds": 1.42,
+      "stop_yaw": 4.946287431434511
+    },
+    {
+      "tier": "advanced",
+      "class_id": 4,
+      "request": -0.6,
+      "actual": -0.6153318689116293,
+      "stop_drift": 0.3523409899997713,
+      "stop_seconds": 1.22,
+      "stop_yaw": 1.97183387940533
+    },
+    {
+      "tier": "advanced",
+      "class_id": 5,
+      "request": 0.6,
+      "actual": 0.43988398368260767,
+      "stop_drift": 0.16208478842043914,
+      "stop_seconds": 0.92,
+      "stop_yaw": 0.6599187464760984
+    },
+    {
+      "tier": "advanced",
+      "class_id": 6,
+      "request": -0.6,
+      "actual": -0.4496162198170978,
+      "stop_drift": 0.1676662050693211,
+      "stop_seconds": 0.9400000000000001,
+      "stop_yaw": 0.7863849058917458
+    }
+  ]
+}

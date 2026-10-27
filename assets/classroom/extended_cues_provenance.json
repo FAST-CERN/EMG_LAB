@@ -1,0 +1,46 @@
+{
+  "generator": "scripts/build_cue_textures.py",
+  "description": "Locally rendered interface labels; straight arrows reuse the supplied forward mesh with body-frame rotation.",
+  "files": {
+    "cue_backward.png": {
+      "text": "准备：后退",
+      "sha256": "4bf101e2a2d9f3eff78d1e39c1a8ac8f0ec38705b3f379e7dee0849d6fbdaf6c"
+    },
+    "cue_strafe_left.png": {
+      "text": "准备：左移",
+      "sha256": "fbf33f147fd65688d6807569eb0e1050f1e632cd2eebd00e86fe126c3d2c7e30"
+    },
+    "cue_strafe_right.png": {
+      "text": "准备：右移",
+      "sha256": "f76de2b5981c0fbdf59298e2cbfd22a259ae0fc90e9799f48f2facecf0d215c2"
+    },
+    "action_rest.png": {
+      "text": "动作：停止",
+      "sha256": "9e7fd05a76d6704572b70947510d6e01c9a4ef90996dec0ec7c18c672816872d"
+    },
+    "action_left.png": {
+      "text": "动作：左转",
+      "sha256": "6b920ba750eb60259843df1768b398d83045597a382ecff6c8767c64290b2d5f"
+    },
+    "action_right.png": {
+      "text": "动作：右转",
+      "sha256": "5c28a70528f7e55eb1dfe9f5e93b774813b65e43f5d7ec0abceb2f675ef8bf59"
+    },
+    "action_forward.png": {
+      "text": "动作：前进",
+      "sha256": "12a958c55b394c172ce6622fa8646a910d7a1a3b883b111f6fda38d564980db9"
+    },
+    "action_backward.png": {
+      "text": "动作：后退",
+      "sha256": "a9a73945f33f37484cf4c51e1e74b6d0727496c0e05984e76661baefb0507be7"
+    },
+    "action_strafe_left.png": {
+      "text": "动作：左移",
+      "sha256": "331ad4f3612e8cdf083f56563e3e1b2129c0a61d1ae47b11bbe4166df28d54d2"
+    },
+    "action_strafe_right.png": {
+      "text": "动作：右移",
+      "sha256": "b0bd88079e08d17329c751fe75edc0c82ea65ac04040125866c9a7cc3bb8f2f8"
+    }
+  }
+}

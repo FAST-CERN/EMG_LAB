@@ -1,0 +1,7 @@
+-r requirements.txt
+./vendor/wheels/bsi_pykit_base-0.4.1-py3-none-any.whl
+./vendor/wheels/bsi_robot_base-0.1.2-py3-none-any.whl
+./vendor/dds/bsi_dds-0.1.1-py3-none-any.whl
+# Bundled CycloneDDS wheel targets CPython 3.13, Windows x64.
+./vendor/dds/cyclonedds-11.0.1-cp313-cp313-win_amd64.whl
+pillow>=10,<13

@@ -1,0 +1,145 @@
+{
+  "seed": 20261025,
+  "physics_dt": 0.005,
+  "policy_dt": 0.02,
+  "results": [
+    {
+      "case": "fixed_STOP_20s",
+      "duration_s": 23.0,
+      "min_height_m": 0.7463,
+      "max_tilt_deg": 0.861,
+      "max_horizontal_speed_m_s": 0.0607,
+      "fallen": false,
+      "passed": true
+    },
+    {
+      "case": "fixed_LEFT_20s",
+      "duration_s": 23.0,
+      "min_height_m": 0.7388,
+      "max_tilt_deg": 7.912,
+      "max_horizontal_speed_m_s": 0.2441,
+      "fallen": false,
+      "passed": true
+    },
+    {
+      "case": "fixed_RIGHT_20s",
+      "duration_s": 23.0,
+      "min_height_m": 0.7377,
+      "max_tilt_deg": 8.017,
+      "max_horizontal_speed_m_s": 0.2538,
+      "fallen": false,
+      "passed": true
+    },
+    {
+      "case": "fixed_FORWARD_20s",
+      "duration_s": 23.0,
+      "min_height_m": 0.7399,
+      "max_tilt_deg": 10.303,
+      "max_horizontal_speed_m_s": 0.6828,
+      "fallen": false,
+      "passed": true
+    },
+    {
+      "case": "fixed_BACKWARD_20s",
+      "duration_s": 23.0,
+      "min_height_m": 0.7334,
+      "max_tilt_deg": 7.608,
+      "max_horizontal_speed_m_s": 0.3425,
+      "fallen": false,
+      "passed": true
+    },
+    {
+      "case": "fixed_STRAFE_LEFT_20s",
+      "duration_s": 23.0,
+      "min_height_m": 0.7374,
+      "max_tilt_deg": 7.793,
+      "max_horizontal_speed_m_s": 0.4027,
+      "fallen": false,
+      "passed": true
+    },
+    {
+      "case": "fixed_STRAFE_RIGHT_20s",
+      "duration_s": 23.0,
+      "min_height_m": 0.7389,
+      "max_tilt_deg": 7.859,
+      "max_horizontal_speed_m_s": 0.4178,
+      "fallen": false,
+      "passed": true
+    },
+    {
+      "case": "all_42_ordered_transitions",
+      "duration_s": 105.0,
+      "min_height_m": 0.7331,
+      "max_tilt_deg": 10.777,
+      "max_horizontal_speed_m_s": 0.62,
+      "fallen": false,
+      "passed": true
+    },
+    {
+      "case": "rapid_random_switch_60s",
+      "duration_s": 60.0,
+      "min_height_m": 0.7345,
+      "max_tilt_deg": 9.907,
+      "max_horizontal_speed_m_s": 0.416,
+      "fallen": false,
+      "passed": true
+    },
+    {
+      "case": "bounded_mixed_(0.6, 0, 0.8)",
+      "duration_s": 18.0,
+      "min_height_m": 0.7397,
+      "max_tilt_deg": 10.303,
+      "max_horizontal_speed_m_s": 0.5303,
+      "fallen": false,
+      "passed": true
+    },
+    {
+      "case": "bounded_mixed_(0.6, 0, -0.8)",
+      "duration_s": 18.0,
+      "min_height_m": 0.738,
+      "max_tilt_deg": 10.417,
+      "max_horizontal_speed_m_s": 0.524,
+      "fallen": false,
+      "passed": true
+    },
+    {
+      "case": "bounded_mixed_(-0.25, 0, 0.8)",
+      "duration_s": 18.0,
+      "min_height_m": 0.7362,
+      "max_tilt_deg": 7.882,
+      "max_horizontal_speed_m_s": 0.2649,
+      "fallen": false,
+      "passed": true
+    },
+    {
+      "case": "bounded_mixed_(0, 0.25, 0.8)",
+      "duration_s": 18.0,
+      "min_height_m": 0.7387,
+      "max_tilt_deg": 8.331,
+      "max_horizontal_speed_m_s": 0.3695,
+      "fallen": false,
+      "passed": true
+    },
+    {
+      "case": "bounded_mixed_(0, -0.25, -0.8)",
+      "duration_s": 18.0,
+      "min_height_m": 0.7375,
+      "max_tilt_deg": 8.204,
+      "max_horizontal_speed_m_s": 0.3809,
+      "fallen": false,
+      "passed": true
+    },
+    {
+      "case": "bounded_mixed_(0.6, 0.25, 0.8)",
+      "duration_s": 18.0,
+      "min_height_m": 0.7378,
+      "max_tilt_deg": 9.508,
+      "max_horizontal_speed_m_s": 0.5198,
+      "fallen": false,
+      "passed": true
+    }
+  ],
+  "all_passed": true,
+  "wall_seconds": 14.715063000039663,
+  "limitation": "Finite simulation cases only; no hardware guarantee or proof for every possible input sequence."
+}

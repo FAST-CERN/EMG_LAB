@@ -1,0 +1,49 @@
+{
+  "version": "2026.10.25-classroom.1",
+  "verified_at": "2026-10-25T21:43:19.042912+08:00",
+  "automated_tests": 115,
+  "failures": 0,
+  "offline_install": "fresh isolated venv on this Windows computer, bundled wheels only",
+  "ui_checks": {
+    "robot7": {
+      "passed": true,
+      "live_commands": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "replay_windows": 168
+    },
+    "hand5": {
+      "passed": true,
+      "live_commands": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "replay_windows": 120
+    }
+  },
+  "software": {
+    "version": "2026.10.25-classroom.1",
+    "software_check": "passed",
+    "rendered": [
+      "robot",
+      "hand"
+    ],
+    "python": "3.13.5 (tags/v3.13.5:6cb20a2, Jun 11 2025, 16:15:46) [MSC v.1943 64 bit (AMD64)]",
+    "torch": "2.14.1+cpu",
+    "onnxruntime": "1.23.2",
+    "mujoco": "3.3.7",
+    "real_device_check": "not_run"
+  },
+  "real_cometa": "deferred at user request",
+  "other_computers": "not tested",
+  "baseline_sha256": "9dc98f1f0e6a276abf0e1f63c1a5f37cf64254f554aa4de312f486e0d6c28de8"
+}

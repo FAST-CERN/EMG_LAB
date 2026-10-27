@@ -1,0 +1,366 @@
+{
+  "state": "complete",
+  "purpose": "Reachability comparison only, ideal geometric controller, no human or EMG input.",
+  "results": [
+    {
+      "tier": "basic",
+      "seed": 20261025,
+      "reason": "completed",
+      "count": 6,
+      "seconds": 41.56,
+      "max_tilt": 9.73864566838182,
+      "min_height": 0.7360363644429777
+    },
+    {
+      "tier": "basic",
+      "seed": 20261026,
+      "reason": "completed",
+      "count": 6,
+      "seconds": 41.66,
+      "max_tilt": 10.843662414266651,
+      "min_height": 0.7354702546842621
+    },
+    {
+      "tier": "basic",
+      "seed": 20261027,
+      "reason": "completed",
+      "count": 6,
+      "seconds": 37.9,
+      "max_tilt": 10.558649208733783,
+      "min_height": 0.736045907728171
+    },
+    {
+      "tier": "basic",
+      "seed": 100,
+      "reason": "completed",
+      "count": 6,
+      "seconds": 41.18,
+      "max_tilt": 10.808611779545423,
+      "min_height": 0.7382067221021544
+    },
+    {
+      "tier": "basic",
+      "seed": 101,
+      "reason": "completed",
+      "count": 6,
+      "seconds": 36.96,
+      "max_tilt": 10.38736235085252,
+      "min_height": 0.7362338687877678
+    },
+    {
+      "tier": "basic",
+      "seed": 102,
+      "reason": "completed",
+      "count": 6,
+      "seconds": 40.48,
+      "max_tilt": 10.758325889226917,
+      "min_height": 0.7378756085686189
+    },
+    {
+      "tier": "basic",
+      "seed": 103,
+      "reason": "completed",
+      "count": 6,
+      "seconds": 40.16,
+      "max_tilt": 10.325336094947927,
+      "min_height": 0.7357212832886145
+    },
+    {
+      "tier": "basic",
+      "seed": 104,
+      "reason": "completed",
+      "count": 6,
+      "seconds": 36.92,
+      "max_tilt": 10.568726225432709,
+      "min_height": 0.7358216525831701
+    },
+    {
+      "tier": "basic",
+      "seed": 105,
+      "reason": "completed",
+      "count": 6,
+      "seconds": 39.34,
+      "max_tilt": 10.405184281702898,
+      "min_height": 0.736972764300702
+    },
+    {
+      "tier": "basic",
+      "seed": 106,
+      "reason": "completed",
+      "count": 6,
+      "seconds": 41.96,
+      "max_tilt": 10.473396624736646,
+      "min_height": 0.7380994054511711
+    },
+    {
+      "tier": "basic",
+      "seed": 107,
+      "reason": "completed",
+      "count": 6,
+      "seconds": 41.18,
+      "max_tilt": 10.167926840049997,
+      "min_height": 0.737445087994446
+    },
+    {
+      "tier": "basic",
+      "seed": 108,
+      "reason": "completed",
+      "count": 6,
+      "seconds": 37.56,
+      "max_tilt": 10.871497454951195,
+      "min_height": 0.7375178303954387
+    },
+    {
+      "tier": "basic",
+      "seed": 109,
+      "reason": "completed",
+      "count": 6,
+      "seconds": 38.46,
+      "max_tilt": 9.864912095862538,
+      "min_height": 0.7379475665585907
+    },
+    {
+      "tier": "basic",
+      "seed": 110,
+      "reason": "completed",
+      "count": 6,
+      "seconds": 40.48,
+      "max_tilt": 10.566088225054015,
+      "min_height": 0.7375969888757593
+    },
+    {
+      "tier": "basic",
+      "seed": 111,
+      "reason": "completed",
+      "count": 6,
+      "seconds": 42.18,
+      "max_tilt": 10.581616346083019,
+      "min_height": 0.7374974220180773
+    },
+    {
+      "tier": "basic",
+      "seed": 112,
+      "reason": "completed",
+      "count": 6,
+      "seconds": 41.46,
+      "max_tilt": 10.418595570253892,
+      "min_height": 0.7356255049075017
+    },
+    {
+      "tier": "basic",
+      "seed": 113,
+      "reason": "completed",
+      "count": 6,
+      "seconds": 37.56,
+      "max_tilt": 10.530654850578731,
+      "min_height": 0.7383339979552743
+    },
+    {
+      "tier": "basic",
+      "seed": 114,
+      "reason": "completed",
+      "count": 6,
+      "seconds": 40.82,
+      "max_tilt": 9.784000271805525,
+      "min_height": 0.7366955478919801
+    },
+    {
+      "tier": "basic",
+      "seed": 115,
+      "reason": "completed",
+      "count": 6,
+      "seconds": 43.18,
+      "max_tilt": 10.68069895870869,
+      "min_height": 0.7377745909672032
+    },
+    {
+      "tier": "basic",
+      "seed": 116,
+      "reason": "completed",
+      "count": 6,
+      "seconds": 40.76,
+      "max_tilt": 10.490583649121264,
+      "min_height": 0.7372303717276442
+    },
+    {
+      "tier": "advanced",
+      "seed": 20261025,
+      "reason": "completed",
+      "count": 6,
+      "seconds": 33.62,
+      "max_tilt": 10.740170006546002,
+      "min_height": 0.7355487176653743
+    },
+    {
+      "tier": "advanced",
+      "seed": 20261026,
+      "reason": "completed",
+      "count": 6,
+      "seconds": 33.78,
+      "max_tilt": 11.119961558187308,
+      "min_height": 0.7363243848035447
+    },
+    {
+      "tier": "advanced",
+      "seed": 20261027,
+      "reason": "completed",
+      "count": 6,
+      "seconds": 31.92,
+      "max_tilt": 10.761677899882082,
+      "min_height": 0.7363368492584766
+    },
+    {
+      "tier": "advanced",
+      "seed": 100,
+      "reason": "completed",
+      "count": 6,
+      "seconds": 33.7,
+      "max_tilt": 10.658771981071625,
+      "min_height": 0.736106549936685
+    },
+    {
+      "tier": "advanced",
+      "seed": 101,
+      "reason": "completed",
+      "count": 6,
+      "seconds": 31.38,
+      "max_tilt": 10.7989485636377,
+      "min_height": 0.7370368244331859
+    },
+    {
+      "tier": "advanced",
+      "seed": 102,
+      "reason": "completed",
+      "count": 6,
+      "seconds": 32.64,
+      "max_tilt": 10.71819776763806,
+      "min_height": 0.7369576809515058
+    },
+    {
+      "tier": "advanced",
+      "seed": 103,
+      "reason": "completed",
+      "count": 6,
+      "seconds": 33.86,
+      "max_tilt": 10.148301475401894,
+      "min_height": 0.736441585261738
+    },
+    {
+      "tier": "advanced",
+      "seed": 104,
+      "reason": "completed",
+      "count": 6,
+      "seconds": 29.74,
+      "max_tilt": 11.004119039858754,
+      "min_height": 0.7360016300244709
+    },
+    {
+      "tier": "advanced",
+      "seed": 105,
+      "reason": "completed",
+      "count": 6,
+      "seconds": 31.98,
+      "max_tilt": 10.012363494186557,
+      "min_height": 0.7376858129256114
+    },
+    {
+      "tier": "advanced",
+      "seed": 106,
+      "reason": "completed",
+      "count": 6,
+      "seconds": 34.44,
+      "max_tilt": 10.50980261326264,
+      "min_height": 0.737382149669604
+    },
+    {
+      "tier": "advanced",
+      "seed": 107,
+      "reason": "completed",
+      "count": 6,
+      "seconds": 33.22,
+      "max_tilt": 10.202565593172524,
+      "min_height": 0.7352910557059491
+    },
+    {
+      "tier": "advanced",
+      "seed": 108,
+      "reason": "completed",
+      "count": 6,
+      "seconds": 29.9,
+      "max_tilt": 10.771960534696055,
+      "min_height": 0.7364252324618722
+    },
+    {
+      "tier": "advanced",
+      "seed": 109,
+      "reason": "completed",
+      "count": 6,
+      "seconds": 31.38,
+      "max_tilt": 10.58001498438579,
+      "min_height": 0.7364840445503156
+    },
+    {
+      "tier": "advanced",
+      "seed": 110,
+      "reason": "completed",
+      "count": 6,
+      "seconds": 33.68,
+      "max_tilt": 10.64147922424599,
+      "min_height": 0.7372813659753348
+    },
+    {
+      "tier": "advanced",
+      "seed": 111,
+      "reason": "completed",
+      "count": 6,
+      "seconds": 34.86,
+      "max_tilt": 10.82335730692733,
+      "min_height": 0.7351835121050756
+    },
+    {
+      "tier": "advanced",
+      "seed": 112,
+      "reason": "completed",
+      "count": 6,
+      "seconds": 33.6,
+      "max_tilt": 10.637814797038237,
+      "min_height": 0.7349629570302718
+    },
+    {
+      "tier": "advanced",
+      "seed": 113,
+      "reason": "completed",
+      "count": 6,
+      "seconds": 30.12,
+      "max_tilt": 10.283761901386258,
+      "min_height": 0.7379952873543216
+    },
+    {
+      "tier": "advanced",
+      "seed": 114,
+      "reason": "completed",
+      "count": 6,
+      "seconds": 33.9,
+      "max_tilt": 10.610043747212496,
+      "min_height": 0.7371001896565506
+    },
+    {
+      "tier": "advanced",
+      "seed": 115,
+      "reason": "completed",
+      "count": 6,
+      "seconds": 35.68,
+      "max_tilt": 10.935257063347846,
+      "min_height": 0.7372387794821273
+    },
+    {
+      "tier": "advanced",
+      "seed": 116,
+      "reason": "completed",
+      "count": 6,
+      "seconds": 33.0,
+      "max_tilt": 10.182440124082945,
+      "min_height": 0.736524263606754
+    }
+  ]
+}

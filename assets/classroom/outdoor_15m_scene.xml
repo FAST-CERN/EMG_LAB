@@ -1,0 +1,266 @@
+﻿<mujoco model="outdoor_15m_scene">
+    <asset>
+        <texture name="outdoor_sky" type="skybox" builtin="gradient" rgb1="0.35 0.66 0.98" rgb2="0.93 0.98 1" width="512" height="512"/>
+
+        <material name="outdoor_park_pavement" rgba="0.30 0.29 0.26 1" reflectance="0" shininess="0.03" specular="0.01"/>
+        <material name="outdoor_meadow" rgba="0.24 0.48 0.22 1" reflectance="0" shininess="0.03" specular="0.01"/>
+        <material name="outdoor_edge_stone" rgba="0.50 0.48 0.42 1" reflectance="0" shininess="0.1" specular="0.06"/>
+        <material name="outdoor_trunk" rgba="0.42 0.24 0.12 1" reflectance="0" shininess="0.12" specular="0.05"/>
+        <material name="outdoor_leaf_dark" rgba="0.10 0.38 0.16 1" reflectance="0" shininess="0.06" specular="0.03"/>
+        <material name="outdoor_leaf_light" rgba="0.18 0.55 0.22 1" reflectance="0" shininess="0.06" specular="0.03"/>
+        <material name="outdoor_shrub" rgba="0.12 0.45 0.20 1" reflectance="0" shininess="0.05" specular="0.02"/>
+        <material name="outdoor_flower_red" rgba="0.92 0.16 0.18 1" reflectance="0" shininess="0.1" specular="0.08"/>
+        <material name="outdoor_flower_yellow" rgba="1.00 0.78 0.12 1" reflectance="0" shininess="0.1" specular="0.08"/>
+        <material name="outdoor_flower_purple" rgba="0.62 0.28 0.86 1" reflectance="0" shininess="0.1" specular="0.08"/>
+        <material name="outdoor_flower_orange" rgba="1.00 0.46 0.10 1" reflectance="0" shininess="0.1" specular="0.08"/>
+        <material name="outdoor_flower_blue" rgba="0.18 0.42 0.95 1" reflectance="0" shininess="0.1" specular="0.08"/>
+        <material name="outdoor_flower_pink" rgba="1.00 0.42 0.68 1" reflectance="0" shininess="0.1" specular="0.08"/>
+        <material name="outdoor_flower_white" rgba="0.96 0.94 0.86 1" reflectance="0" shininess="0.1" specular="0.08"/>
+    </asset>
+
+    <statistic extent="14" center="0 0 1.2"/>
+
+    <visual>
+        <scale light=".08" framewidth=".005"/>
+        <headlight ambient=".38 .40 .42" diffuse=".40 .40 .38" specular=".16 .16 .14"/>
+        <global elevation="-18" azimuth="135" offwidth="1920" offheight="1080"/>
+        <rgba actuator=".7 .4 .4 1" actuatorpositive="1 0 0 1" actuatornegative=".175 .1 .1 1"/>
+    </visual>
+
+    <worldbody>
+        <light name="outdoor_sun" directional="true" castshadow="true" diffuse=".95 .92 .82" specular=".28 .25 .18" pos="-5 -6 10" dir=".45 .55 -1"/>
+        <light name="outdoor_sky_fill" directional="true" castshadow="false" diffuse=".24 .30 .38" specular="0.03 0.04 0.05" pos="4 5 8" dir="-.4 -.5 -1"/>
+
+        <camera name="outdoor_overview" pos="-8 -9 4.2" xyaxes="0.747 -0.665 0 0.265 0.298 0.917"/>
+        <camera name="outdoor_front" pos="0 -9 2.6" xyaxes="1 0 0 0 0.287 0.958"/>
+        <camera name="outdoor_side" pos="-9 0 2.6" xyaxes="0 -1 0 0.287 0 0.958"/>
+
+        <!-- Infinite z=0 contact floor; rendered size marks the 15 m x 15 m training area. -->
+        <geom name="floor" type="plane" pos="0 0 0" size="7.5 7.5 0.05" material="outdoor_park_pavement" conaffinity="1" contype="1" condim="3"/>
+        <geom name="outdoor_meadow_visual" type="box" pos="0 0 -0.055" size="24 24 0.02" material="outdoor_meadow" conaffinity="0" contype="0" group="1"/>
+
+        <geom name="outdoor_north_edge" type="box" pos="0 7.65 0.03" size="7.7 0.08 0.035" material="outdoor_edge_stone" conaffinity="0" contype="0" group="1"/>
+        <geom name="outdoor_south_edge" type="box" pos="0 -7.65 0.03" size="7.7 0.08 0.035" material="outdoor_edge_stone" conaffinity="0" contype="0" group="1"/>
+        <geom name="outdoor_east_edge" type="box" pos="7.65 0 0.03" size="0.08 7.7 0.035" material="outdoor_edge_stone" conaffinity="0" contype="0" group="1"/>
+        <geom name="outdoor_west_edge" type="box" pos="-7.65 0 0.03" size="0.08 7.7 0.035" material="outdoor_edge_stone" conaffinity="0" contype="0" group="1"/>
+
+        <!-- Clouds are distant sites instead of geoms, so they are visible but cast no shadows. -->
+        <site name="outdoor_cloud_west_1a" type="ellipsoid" pos="-22.0 -8.5 8.4" size="0.95 0.36 0.24" rgba="1 1 1 0.80" group="1"/>
+        <site name="outdoor_cloud_west_1b" type="ellipsoid" pos="-20.8 -8.7 8.55" size="1.25 0.46 0.32" rgba="1 1 1 0.84" group="1"/>
+        <site name="outdoor_cloud_west_1c" type="ellipsoid" pos="-19.4 -8.4 8.38" size="0.82 0.34 0.22" rgba="1 1 1 0.78" group="1"/>
+        <site name="outdoor_cloud_west_2a" type="ellipsoid" pos="-24.6 9.8 9.2" size="0.78 0.30 0.22" rgba="1 1 1 0.76" group="1"/>
+        <site name="outdoor_cloud_west_2b" type="ellipsoid" pos="-23.4 10.1 9.35" size="1.10 0.42 0.30" rgba="1 1 1 0.82" group="1"/>
+        <site name="outdoor_cloud_west_2c" type="ellipsoid" pos="-22.1 9.9 9.18" size="0.74 0.30 0.20" rgba="1 1 1 0.76" group="1"/>
+        <site name="outdoor_cloud_north_1a" type="ellipsoid" pos="-5.6 23.8 9.0" size="0.86 0.32 0.22" rgba="1 1 1 0.78" group="1"/>
+        <site name="outdoor_cloud_north_1b" type="ellipsoid" pos="-4.2 24.1 9.18" size="1.30 0.48 0.34" rgba="1 1 1 0.84" group="1"/>
+        <site name="outdoor_cloud_north_1c" type="ellipsoid" pos="-2.7 23.7 8.96" size="0.88 0.34 0.23" rgba="1 1 1 0.78" group="1"/>
+        <site name="outdoor_cloud_north_2a" type="ellipsoid" pos="14.8 22.2 8.6" size="0.82 0.31 0.21" rgba="1 1 1 0.76" group="1"/>
+        <site name="outdoor_cloud_north_2b" type="ellipsoid" pos="16.0 22.4 8.78" size="1.15 0.43 0.30" rgba="1 1 1 0.82" group="1"/>
+        <site name="outdoor_cloud_north_2c" type="ellipsoid" pos="17.4 22.1 8.58" size="0.78 0.30 0.20" rgba="1 1 1 0.76" group="1"/>
+        <site name="outdoor_cloud_east_1a" type="ellipsoid" pos="25.0 -4.8 8.2" size="0.90 0.34 0.24" rgba="1 1 1 0.78" group="1"/>
+        <site name="outdoor_cloud_east_1b" type="ellipsoid" pos="26.2 -4.5 8.38" size="1.22 0.46 0.32" rgba="1 1 1 0.84" group="1"/>
+        <site name="outdoor_cloud_east_1c" type="ellipsoid" pos="27.6 -4.9 8.18" size="0.82 0.32 0.22" rgba="1 1 1 0.78" group="1"/>
+        <site name="outdoor_cloud_east_2a" type="ellipsoid" pos="22.5 13.6 9.5" size="0.75 0.29 0.20" rgba="1 1 1 0.76" group="1"/>
+        <site name="outdoor_cloud_east_2b" type="ellipsoid" pos="23.8 13.9 9.65" size="1.05 0.40 0.28" rgba="1 1 1 0.82" group="1"/>
+        <site name="outdoor_cloud_east_2c" type="ellipsoid" pos="25.0 13.5 9.48" size="0.72 0.28 0.19" rgba="1 1 1 0.76" group="1"/>
+        <site name="outdoor_cloud_south_1a" type="ellipsoid" pos="-9.4 -24.8 8.8" size="0.84 0.32 0.22" rgba="1 1 1 0.78" group="1"/>
+        <site name="outdoor_cloud_south_1b" type="ellipsoid" pos="-8.0 -25.1 8.98" size="1.20 0.45 0.31" rgba="1 1 1 0.84" group="1"/>
+        <site name="outdoor_cloud_south_1c" type="ellipsoid" pos="-6.6 -24.7 8.76" size="0.78 0.30 0.21" rgba="1 1 1 0.78" group="1"/>
+        <site name="outdoor_cloud_south_2a" type="ellipsoid" pos="12.2 -22.6 8.0" size="0.82 0.31 0.22" rgba="1 1 1 0.76" group="1"/>
+        <site name="outdoor_cloud_south_2b" type="ellipsoid" pos="13.4 -22.9 8.16" size="1.10 0.42 0.29" rgba="1 1 1 0.82" group="1"/>
+        <site name="outdoor_cloud_south_2c" type="ellipsoid" pos="14.8 -22.5 7.96" size="0.74 0.29 0.20" rgba="1 1 1 0.76" group="1"/>
+
+        <!-- Pseudo-random sparse tree distribution around, not inside, the 15 m platform. -->
+        <body name="outdoor_tree_01" pos="-12.4 10.2 0">
+            <geom name="outdoor_tree_01_trunk" type="cylinder" pos="0 0 0.68" size="0.14 0.68" material="outdoor_trunk" conaffinity="0" contype="0" group="1"/>
+            <geom name="outdoor_tree_01_leaf_1" type="sphere" pos="0 0 1.62" size="0.68" material="outdoor_leaf_dark" conaffinity="0" contype="0" group="1"/>
+            <geom name="outdoor_tree_01_leaf_2" type="sphere" pos="-0.38 0.18 1.45" size="0.43" material="outdoor_leaf_light" conaffinity="0" contype="0" group="1"/>
+            <geom name="outdoor_tree_01_leaf_3" type="sphere" pos="0.40 -0.14 1.52" size="0.46" material="outdoor_leaf_light" conaffinity="0" contype="0" group="1"/>
+        </body>
+        <body name="outdoor_tree_02" pos="-16.0 3.6 0">
+            <geom name="outdoor_tree_02_trunk" type="cylinder" pos="0 0 0.92" size="0.19 0.92" material="outdoor_trunk" conaffinity="0" contype="0" group="1"/>
+            <geom name="outdoor_tree_02_leaf_1" type="sphere" pos="0 0 2.06" size="0.90" material="outdoor_leaf_dark" conaffinity="0" contype="0" group="1"/>
+            <geom name="outdoor_tree_02_leaf_2" type="sphere" pos="-0.50 -0.22 1.83" size="0.55" material="outdoor_leaf_light" conaffinity="0" contype="0" group="1"/>
+            <geom name="outdoor_tree_02_leaf_3" type="sphere" pos="0.52 0.18 1.88" size="0.58" material="outdoor_leaf_light" conaffinity="0" contype="0" group="1"/>
+        </body>
+        <body name="outdoor_tree_03" pos="-13.3 -7.8 0">
+            <geom name="outdoor_tree_03_trunk" type="cylinder" pos="0 0 0.78" size="0.16 0.78" material="outdoor_trunk" conaffinity="0" contype="0" group="1"/>
+            <geom name="outdoor_tree_03_leaf_1" type="sphere" pos="0 0 1.76" size="0.76" material="outdoor_leaf_dark" conaffinity="0" contype="0" group="1"/>
+            <geom name="outdoor_tree_03_leaf_2" type="sphere" pos="0.43 0.18 1.58" size="0.48" material="outdoor_leaf_light" conaffinity="0" contype="0" group="1"/>
+        </body>
+        <body name="outdoor_tree_04" pos="-8.9 -14.2 0">
+            <geom name="outdoor_tree_04_trunk" type="cylinder" pos="0 0 0.58" size="0.13 0.58" material="outdoor_trunk" conaffinity="0" contype="0" group="1"/>
+            <geom name="outdoor_tree_04_leaf_1" type="sphere" pos="0 0 1.42" size="0.62" material="outdoor_leaf_dark" conaffinity="0" contype="0" group="1"/>
+            <geom name="outdoor_tree_04_leaf_2" type="sphere" pos="-0.34 0.20 1.28" size="0.38" material="outdoor_leaf_light" conaffinity="0" contype="0" group="1"/>
+        </body>
+        <body name="outdoor_tree_05" pos="-2.6 13.6 0">
+            <geom name="outdoor_tree_05_trunk" type="cylinder" pos="0 0 0.86" size="0.17 0.86" material="outdoor_trunk" conaffinity="0" contype="0" group="1"/>
+            <geom name="outdoor_tree_05_leaf_1" type="sphere" pos="0 0 1.96" size="0.84" material="outdoor_leaf_dark" conaffinity="0" contype="0" group="1"/>
+            <geom name="outdoor_tree_05_leaf_2" type="sphere" pos="-0.45 0.17 1.72" size="0.52" material="outdoor_leaf_light" conaffinity="0" contype="0" group="1"/>
+            <geom name="outdoor_tree_05_leaf_3" type="sphere" pos="0.48 -0.18 1.76" size="0.54" material="outdoor_leaf_light" conaffinity="0" contype="0" group="1"/>
+        </body>
+        <body name="outdoor_tree_06" pos="3.8 -15.1 0">
+            <geom name="outdoor_tree_06_trunk" type="cylinder" pos="0 0 1.02" size="0.20 1.02" material="outdoor_trunk" conaffinity="0" contype="0" group="1"/>
+            <geom name="outdoor_tree_06_leaf_1" type="sphere" pos="0 0 2.24" size="0.98" material="outdoor_leaf_dark" conaffinity="0" contype="0" group="1"/>
+            <geom name="outdoor_tree_06_leaf_2" type="sphere" pos="-0.58 0.22 2.00" size="0.60" material="outdoor_leaf_light" conaffinity="0" contype="0" group="1"/>
+            <geom name="outdoor_tree_06_leaf_3" type="sphere" pos="0.55 -0.20 2.06" size="0.62" material="outdoor_leaf_light" conaffinity="0" contype="0" group="1"/>
+        </body>
+        <body name="outdoor_tree_07" pos="8.8 14.4 0">
+            <geom name="outdoor_tree_07_trunk" type="cylinder" pos="0 0 0.64" size="0.14 0.64" material="outdoor_trunk" conaffinity="0" contype="0" group="1"/>
+            <geom name="outdoor_tree_07_leaf_1" type="sphere" pos="0 0 1.54" size="0.66" material="outdoor_leaf_dark" conaffinity="0" contype="0" group="1"/>
+            <geom name="outdoor_tree_07_leaf_2" type="sphere" pos="0.35 -0.16 1.39" size="0.40" material="outdoor_leaf_light" conaffinity="0" contype="0" group="1"/>
+        </body>
+        <body name="outdoor_tree_08" pos="12.5 8.1 0">
+            <geom name="outdoor_tree_08_trunk" type="cylinder" pos="0 0 0.95" size="0.19 0.95" material="outdoor_trunk" conaffinity="0" contype="0" group="1"/>
+            <geom name="outdoor_tree_08_leaf_1" type="sphere" pos="0 0 2.12" size="0.92" material="outdoor_leaf_dark" conaffinity="0" contype="0" group="1"/>
+            <geom name="outdoor_tree_08_leaf_2" type="sphere" pos="-0.52 -0.18 1.90" size="0.57" material="outdoor_leaf_light" conaffinity="0" contype="0" group="1"/>
+            <geom name="outdoor_tree_08_leaf_3" type="sphere" pos="0.55 0.20 1.95" size="0.59" material="outdoor_leaf_light" conaffinity="0" contype="0" group="1"/>
+        </body>
+        <body name="outdoor_tree_09" pos="16.2 0.5 0">
+            <geom name="outdoor_tree_09_trunk" type="cylinder" pos="0 0 0.72" size="0.15 0.72" material="outdoor_trunk" conaffinity="0" contype="0" group="1"/>
+            <geom name="outdoor_tree_09_leaf_1" type="sphere" pos="0 0 1.68" size="0.72" material="outdoor_leaf_dark" conaffinity="0" contype="0" group="1"/>
+            <geom name="outdoor_tree_09_leaf_2" type="sphere" pos="-0.38 0.18 1.52" size="0.44" material="outdoor_leaf_light" conaffinity="0" contype="0" group="1"/>
+        </body>
+        <body name="outdoor_tree_10" pos="13.4 -10.7 0">
+            <geom name="outdoor_tree_10_trunk" type="cylinder" pos="0 0 0.82" size="0.16 0.82" material="outdoor_trunk" conaffinity="0" contype="0" group="1"/>
+            <geom name="outdoor_tree_10_leaf_1" type="sphere" pos="0 0 1.86" size="0.80" material="outdoor_leaf_dark" conaffinity="0" contype="0" group="1"/>
+            <geom name="outdoor_tree_10_leaf_2" type="sphere" pos="0.44 -0.16 1.66" size="0.50" material="outdoor_leaf_light" conaffinity="0" contype="0" group="1"/>
+            <geom name="outdoor_tree_10_leaf_3" type="sphere" pos="-0.46 0.18 1.70" size="0.52" material="outdoor_leaf_light" conaffinity="0" contype="0" group="1"/>
+        </body>
+        <body name="outdoor_tree_11" pos="6.1 12.6 0">
+            <geom name="outdoor_tree_11_trunk" type="cylinder" pos="0 0 0.55" size="0.12 0.55" material="outdoor_trunk" conaffinity="0" contype="0" group="1"/>
+            <geom name="outdoor_tree_11_leaf_1" type="sphere" pos="0 0 1.34" size="0.58" material="outdoor_leaf_dark" conaffinity="0" contype="0" group="1"/>
+            <geom name="outdoor_tree_11_leaf_2" type="sphere" pos="-0.32 0.16 1.22" size="0.36" material="outdoor_leaf_light" conaffinity="0" contype="0" group="1"/>
+        </body>
+        <body name="outdoor_tree_12" pos="-6.8 -13.3 0">
+            <geom name="outdoor_tree_12_trunk" type="cylinder" pos="0 0 0.88" size="0.18 0.88" material="outdoor_trunk" conaffinity="0" contype="0" group="1"/>
+            <geom name="outdoor_tree_12_leaf_1" type="sphere" pos="0 0 2.02" size="0.86" material="outdoor_leaf_dark" conaffinity="0" contype="0" group="1"/>
+            <geom name="outdoor_tree_12_leaf_2" type="sphere" pos="0.48 0.20 1.78" size="0.54" material="outdoor_leaf_light" conaffinity="0" contype="0" group="1"/>
+        </body>
+        <body name="outdoor_tree_13" pos="18.0 -4.7 0">
+            <geom name="outdoor_tree_13_trunk" type="cylinder" pos="0 0 0.76" size="0.15 0.76" material="outdoor_trunk" conaffinity="0" contype="0" group="1"/>
+            <geom name="outdoor_tree_13_leaf_1" type="sphere" pos="0 0 1.72" size="0.74" material="outdoor_leaf_dark" conaffinity="0" contype="0" group="1"/>
+            <geom name="outdoor_tree_13_leaf_2" type="sphere" pos="-0.40 -0.16 1.56" size="0.46" material="outdoor_leaf_light" conaffinity="0" contype="0" group="1"/>
+        </body>
+        <body name="outdoor_tree_14" pos="-18.2 -1.6 0">
+            <geom name="outdoor_tree_14_trunk" type="cylinder" pos="0 0 1.05" size="0.21 1.05" material="outdoor_trunk" conaffinity="0" contype="0" group="1"/>
+            <geom name="outdoor_tree_14_leaf_1" type="sphere" pos="0 0 2.32" size="1.02" material="outdoor_leaf_dark" conaffinity="0" contype="0" group="1"/>
+            <geom name="outdoor_tree_14_leaf_2" type="sphere" pos="-0.60 0.24 2.08" size="0.62" material="outdoor_leaf_light" conaffinity="0" contype="0" group="1"/>
+            <geom name="outdoor_tree_14_leaf_3" type="sphere" pos="0.58 -0.22 2.12" size="0.64" material="outdoor_leaf_light" conaffinity="0" contype="0" group="1"/>
+        </body>
+        <body name="outdoor_tree_15" pos="-21.4 7.0 0">
+            <geom name="outdoor_tree_15_trunk" type="cylinder" pos="0 0 0.62" size="0.13 0.62" material="outdoor_trunk" conaffinity="0" contype="0" group="1"/>
+            <geom name="outdoor_tree_15_leaf_1" type="sphere" pos="0 0 1.48" size="0.64" material="outdoor_leaf_dark" conaffinity="0" contype="0" group="1"/>
+            <geom name="outdoor_tree_15_leaf_2" type="sphere" pos="-0.34 0.16 1.34" size="0.39" material="outdoor_leaf_light" conaffinity="0" contype="0" group="1"/>
+        </body>
+        <body name="outdoor_tree_16" pos="-18.8 -11.6 0">
+            <geom name="outdoor_tree_16_trunk" type="cylinder" pos="0 0 0.94" size="0.19 0.94" material="outdoor_trunk" conaffinity="0" contype="0" group="1"/>
+            <geom name="outdoor_tree_16_leaf_1" type="sphere" pos="0 0 2.10" size="0.91" material="outdoor_leaf_dark" conaffinity="0" contype="0" group="1"/>
+            <geom name="outdoor_tree_16_leaf_2" type="sphere" pos="0.52 0.18 1.90" size="0.57" material="outdoor_leaf_light" conaffinity="0" contype="0" group="1"/>
+            <geom name="outdoor_tree_16_leaf_3" type="sphere" pos="-0.50 -0.20 1.86" size="0.55" material="outdoor_leaf_light" conaffinity="0" contype="0" group="1"/>
+        </body>
+        <body name="outdoor_tree_17" pos="-10.8 17.9 0">
+            <geom name="outdoor_tree_17_trunk" type="cylinder" pos="0 0 0.72" size="0.15 0.72" material="outdoor_trunk" conaffinity="0" contype="0" group="1"/>
+            <geom name="outdoor_tree_17_leaf_1" type="sphere" pos="0 0 1.68" size="0.72" material="outdoor_leaf_dark" conaffinity="0" contype="0" group="1"/>
+            <geom name="outdoor_tree_17_leaf_2" type="sphere" pos="-0.40 0.16 1.52" size="0.44" material="outdoor_leaf_light" conaffinity="0" contype="0" group="1"/>
+        </body>
+        <body name="outdoor_tree_18" pos="-1.2 -20.4 0">
+            <geom name="outdoor_tree_18_trunk" type="cylinder" pos="0 0 0.83" size="0.17 0.83" material="outdoor_trunk" conaffinity="0" contype="0" group="1"/>
+            <geom name="outdoor_tree_18_leaf_1" type="sphere" pos="0 0 1.88" size="0.80" material="outdoor_leaf_dark" conaffinity="0" contype="0" group="1"/>
+            <geom name="outdoor_tree_18_leaf_2" type="sphere" pos="0.44 -0.18 1.70" size="0.50" material="outdoor_leaf_light" conaffinity="0" contype="0" group="1"/>
+            <geom name="outdoor_tree_18_leaf_3" type="sphere" pos="-0.44 0.18 1.68" size="0.50" material="outdoor_leaf_light" conaffinity="0" contype="0" group="1"/>
+        </body>
+        <body name="outdoor_tree_19" pos="1.6 19.8 0">
+            <geom name="outdoor_tree_19_trunk" type="cylinder" pos="0 0 0.57" size="0.12 0.57" material="outdoor_trunk" conaffinity="0" contype="0" group="1"/>
+            <geom name="outdoor_tree_19_leaf_1" type="sphere" pos="0 0 1.36" size="0.58" material="outdoor_leaf_dark" conaffinity="0" contype="0" group="1"/>
+            <geom name="outdoor_tree_19_leaf_2" type="sphere" pos="0.30 -0.16 1.24" size="0.36" material="outdoor_leaf_light" conaffinity="0" contype="0" group="1"/>
+        </body>
+        <body name="outdoor_tree_20" pos="11.7 18.6 0">
+            <geom name="outdoor_tree_20_trunk" type="cylinder" pos="0 0 1.00" size="0.20 1.00" material="outdoor_trunk" conaffinity="0" contype="0" group="1"/>
+            <geom name="outdoor_tree_20_leaf_1" type="sphere" pos="0 0 2.22" size="0.96" material="outdoor_leaf_dark" conaffinity="0" contype="0" group="1"/>
+            <geom name="outdoor_tree_20_leaf_2" type="sphere" pos="-0.55 0.20 2.00" size="0.60" material="outdoor_leaf_light" conaffinity="0" contype="0" group="1"/>
+            <geom name="outdoor_tree_20_leaf_3" type="sphere" pos="0.56 -0.18 2.04" size="0.62" material="outdoor_leaf_light" conaffinity="0" contype="0" group="1"/>
+        </body>
+        <body name="outdoor_tree_21" pos="20.4 5.8 0">
+            <geom name="outdoor_tree_21_trunk" type="cylinder" pos="0 0 0.74" size="0.15 0.74" material="outdoor_trunk" conaffinity="0" contype="0" group="1"/>
+            <geom name="outdoor_tree_21_leaf_1" type="sphere" pos="0 0 1.72" size="0.74" material="outdoor_leaf_dark" conaffinity="0" contype="0" group="1"/>
+            <geom name="outdoor_tree_21_leaf_2" type="sphere" pos="-0.40 0.18 1.55" size="0.46" material="outdoor_leaf_light" conaffinity="0" contype="0" group="1"/>
+        </body>
+        <body name="outdoor_tree_22" pos="19.0 -13.8 0">
+            <geom name="outdoor_tree_22_trunk" type="cylinder" pos="0 0 0.89" size="0.18 0.89" material="outdoor_trunk" conaffinity="0" contype="0" group="1"/>
+            <geom name="outdoor_tree_22_leaf_1" type="sphere" pos="0 0 2.02" size="0.86" material="outdoor_leaf_dark" conaffinity="0" contype="0" group="1"/>
+            <geom name="outdoor_tree_22_leaf_2" type="sphere" pos="0.48 -0.20 1.82" size="0.54" material="outdoor_leaf_light" conaffinity="0" contype="0" group="1"/>
+            <geom name="outdoor_tree_22_leaf_3" type="sphere" pos="-0.48 0.18 1.80" size="0.54" material="outdoor_leaf_light" conaffinity="0" contype="0" group="1"/>
+        </body>
+        <body name="outdoor_tree_23" pos="23.0 -1.8 0">
+            <geom name="outdoor_tree_23_trunk" type="cylinder" pos="0 0 0.60" size="0.13 0.60" material="outdoor_trunk" conaffinity="0" contype="0" group="1"/>
+            <geom name="outdoor_tree_23_leaf_1" type="sphere" pos="0 0 1.45" size="0.62" material="outdoor_leaf_dark" conaffinity="0" contype="0" group="1"/>
+            <geom name="outdoor_tree_23_leaf_2" type="sphere" pos="-0.34 -0.16 1.30" size="0.38" material="outdoor_leaf_light" conaffinity="0" contype="0" group="1"/>
+        </body>
+        <body name="outdoor_tree_24" pos="7.8 -21.5 0">
+            <geom name="outdoor_tree_24_trunk" type="cylinder" pos="0 0 0.96" size="0.19 0.96" material="outdoor_trunk" conaffinity="0" contype="0" group="1"/>
+            <geom name="outdoor_tree_24_leaf_1" type="sphere" pos="0 0 2.14" size="0.92" material="outdoor_leaf_dark" conaffinity="0" contype="0" group="1"/>
+            <geom name="outdoor_tree_24_leaf_2" type="sphere" pos="0.52 0.20 1.92" size="0.58" material="outdoor_leaf_light" conaffinity="0" contype="0" group="1"/>
+            <geom name="outdoor_tree_24_leaf_3" type="sphere" pos="-0.52 -0.18 1.90" size="0.58" material="outdoor_leaf_light" conaffinity="0" contype="0" group="1"/>
+        </body>
+
+        <!-- Sparse shrubs and randomized flower colors around the training area. -->
+        <geom name="outdoor_shrub_01" type="sphere" pos="-8.7 -5.5 0.22" size="0.38" material="outdoor_shrub" conaffinity="0" contype="0" group="1"/>
+        <geom name="outdoor_shrub_02" type="sphere" pos="-9.2 -1.1 0.24" size="0.42" material="outdoor_shrub" conaffinity="0" contype="0" group="1"/>
+        <geom name="outdoor_shrub_03" type="sphere" pos="-8.5 4.4 0.22" size="0.36" material="outdoor_shrub" conaffinity="0" contype="0" group="1"/>
+        <geom name="outdoor_shrub_04" type="sphere" pos="8.9 -4.2 0.22" size="0.38" material="outdoor_shrub" conaffinity="0" contype="0" group="1"/>
+        <geom name="outdoor_shrub_05" type="sphere" pos="9.4 1.2 0.24" size="0.42" material="outdoor_shrub" conaffinity="0" contype="0" group="1"/>
+        <geom name="outdoor_shrub_06" type="sphere" pos="8.8 5.7 0.22" size="0.36" material="outdoor_shrub" conaffinity="0" contype="0" group="1"/>
+        <geom name="outdoor_shrub_07" type="sphere" pos="-5.8 9.1 0.20" size="0.34" material="outdoor_shrub" conaffinity="0" contype="0" group="1"/>
+        <geom name="outdoor_shrub_08" type="sphere" pos="5.9 9.4 0.20" size="0.36" material="outdoor_shrub" conaffinity="0" contype="0" group="1"/>
+        <geom name="outdoor_shrub_09" type="sphere" pos="-4.6 -9.3 0.21" size="0.35" material="outdoor_shrub" conaffinity="0" contype="0" group="1"/>
+        <geom name="outdoor_shrub_10" type="sphere" pos="6.6 -9.0 0.20" size="0.33" material="outdoor_shrub" conaffinity="0" contype="0" group="1"/>
+        <geom name="outdoor_shrub_11" type="sphere" pos="-13.8 6.4 0.22" size="0.34" material="outdoor_shrub" conaffinity="0" contype="0" group="1"/>
+        <geom name="outdoor_shrub_12" type="sphere" pos="-15.2 -4.8 0.24" size="0.38" material="outdoor_shrub" conaffinity="0" contype="0" group="1"/>
+        <geom name="outdoor_shrub_13" type="sphere" pos="-11.4 -11.6 0.21" size="0.32" material="outdoor_shrub" conaffinity="0" contype="0" group="1"/>
+        <geom name="outdoor_shrub_14" type="sphere" pos="-2.4 12.2 0.23" size="0.36" material="outdoor_shrub" conaffinity="0" contype="0" group="1"/>
+        <geom name="outdoor_shrub_15" type="sphere" pos="2.2 -12.7 0.22" size="0.34" material="outdoor_shrub" conaffinity="0" contype="0" group="1"/>
+        <geom name="outdoor_shrub_16" type="sphere" pos="10.6 10.4 0.25" size="0.40" material="outdoor_shrub" conaffinity="0" contype="0" group="1"/>
+        <geom name="outdoor_shrub_17" type="sphere" pos="13.8 -7.0 0.23" size="0.36" material="outdoor_shrub" conaffinity="0" contype="0" group="1"/>
+        <geom name="outdoor_shrub_18" type="sphere" pos="17.2 2.9 0.22" size="0.34" material="outdoor_shrub" conaffinity="0" contype="0" group="1"/>
+        <geom name="outdoor_shrub_19" type="sphere" pos="-20.1 1.9 0.20" size="0.30" material="outdoor_shrub" conaffinity="0" contype="0" group="1"/>
+        <geom name="outdoor_shrub_20" type="sphere" pos="21.0 -3.6 0.20" size="0.30" material="outdoor_shrub" conaffinity="0" contype="0" group="1"/>
+        <geom name="outdoor_shrub_21" type="sphere" pos="14.4 15.6 0.23" size="0.36" material="outdoor_shrub" conaffinity="0" contype="0" group="1"/>
+        <geom name="outdoor_shrub_22" type="sphere" pos="-14.8 14.0 0.23" size="0.36" material="outdoor_shrub" conaffinity="0" contype="0" group="1"/>
+        <geom name="outdoor_shrub_23" type="sphere" pos="-16.4 -15.4 0.22" size="0.34" material="outdoor_shrub" conaffinity="0" contype="0" group="1"/>
+        <geom name="outdoor_shrub_24" type="sphere" pos="15.9 -16.1 0.22" size="0.34" material="outdoor_shrub" conaffinity="0" contype="0" group="1"/>
+
+        <geom name="outdoor_flower_01" type="sphere" pos="-6.4 8.55 0.11" size="0.07" material="outdoor_flower_red" conaffinity="0" contype="0" group="1"/>
+        <geom name="outdoor_flower_02" type="sphere" pos="-5.1 8.90 0.10" size="0.06" material="outdoor_flower_yellow" conaffinity="0" contype="0" group="1"/>
+        <geom name="outdoor_flower_03" type="sphere" pos="-3.7 8.38 0.10" size="0.06" material="outdoor_flower_purple" conaffinity="0" contype="0" group="1"/>
+        <geom name="outdoor_flower_04" type="sphere" pos="-2.2 9.10 0.11" size="0.07" material="outdoor_flower_orange" conaffinity="0" contype="0" group="1"/>
+        <geom name="outdoor_flower_05" type="sphere" pos="-0.7 8.62 0.10" size="0.06" material="outdoor_flower_blue" conaffinity="0" contype="0" group="1"/>
+        <geom name="outdoor_flower_06" type="sphere" pos="1.0 9.05 0.10" size="0.06" material="outdoor_flower_pink" conaffinity="0" contype="0" group="1"/>
+        <geom name="outdoor_flower_07" type="sphere" pos="2.5 8.45 0.11" size="0.07" material="outdoor_flower_white" conaffinity="0" contype="0" group="1"/>
+        <geom name="outdoor_flower_08" type="sphere" pos="4.0 8.95 0.10" size="0.06" material="outdoor_flower_red" conaffinity="0" contype="0" group="1"/>
+        <geom name="outdoor_flower_09" type="sphere" pos="5.7 8.50 0.10" size="0.06" material="outdoor_flower_yellow" conaffinity="0" contype="0" group="1"/>
+        <geom name="outdoor_flower_10" type="sphere" pos="-6.0 -8.55 0.11" size="0.07" material="outdoor_flower_blue" conaffinity="0" contype="0" group="1"/>
+        <geom name="outdoor_flower_11" type="sphere" pos="-4.5 -9.00 0.10" size="0.06" material="outdoor_flower_pink" conaffinity="0" contype="0" group="1"/>
+        <geom name="outdoor_flower_12" type="sphere" pos="-3.0 -8.40 0.10" size="0.06" material="outdoor_flower_white" conaffinity="0" contype="0" group="1"/>
+        <geom name="outdoor_flower_13" type="sphere" pos="-1.2 -9.18 0.11" size="0.07" material="outdoor_flower_orange" conaffinity="0" contype="0" group="1"/>
+        <geom name="outdoor_flower_14" type="sphere" pos="0.4 -8.65 0.10" size="0.06" material="outdoor_flower_purple" conaffinity="0" contype="0" group="1"/>
+        <geom name="outdoor_flower_15" type="sphere" pos="2.1 -9.05 0.10" size="0.06" material="outdoor_flower_yellow" conaffinity="0" contype="0" group="1"/>
+        <geom name="outdoor_flower_16" type="sphere" pos="3.7 -8.42 0.11" size="0.07" material="outdoor_flower_red" conaffinity="0" contype="0" group="1"/>
+        <geom name="outdoor_flower_17" type="sphere" pos="5.3 -8.92 0.10" size="0.06" material="outdoor_flower_blue" conaffinity="0" contype="0" group="1"/>
+        <geom name="outdoor_flower_18" type="sphere" pos="6.8 -8.48 0.10" size="0.06" material="outdoor_flower_pink" conaffinity="0" contype="0" group="1"/>
+        <geom name="outdoor_flower_19" type="sphere" pos="-8.6 -6.6 0.11" size="0.07" material="outdoor_flower_white" conaffinity="0" contype="0" group="1"/>
+        <geom name="outdoor_flower_20" type="sphere" pos="-9.3 -4.7 0.10" size="0.06" material="outdoor_flower_orange" conaffinity="0" contype="0" group="1"/>
+        <geom name="outdoor_flower_21" type="sphere" pos="-8.7 -2.8 0.10" size="0.06" material="outdoor_flower_yellow" conaffinity="0" contype="0" group="1"/>
+        <geom name="outdoor_flower_22" type="sphere" pos="-9.6 -0.7 0.11" size="0.07" material="outdoor_flower_red" conaffinity="0" contype="0" group="1"/>
+        <geom name="outdoor_flower_23" type="sphere" pos="-8.8 1.4 0.10" size="0.06" material="outdoor_flower_purple" conaffinity="0" contype="0" group="1"/>
+        <geom name="outdoor_flower_24" type="sphere" pos="-9.4 3.5 0.10" size="0.06" material="outdoor_flower_blue" conaffinity="0" contype="0" group="1"/>
+        <geom name="outdoor_flower_25" type="sphere" pos="-8.5 5.6 0.11" size="0.07" material="outdoor_flower_pink" conaffinity="0" contype="0" group="1"/>
+        <geom name="outdoor_flower_26" type="sphere" pos="8.7 -6.1 0.11" size="0.07" material="outdoor_flower_purple" conaffinity="0" contype="0" group="1"/>
+        <geom name="outdoor_flower_27" type="sphere" pos="9.4 -4.4 0.10" size="0.06" material="outdoor_flower_blue" conaffinity="0" contype="0" group="1"/>
+        <geom name="outdoor_flower_28" type="sphere" pos="8.9 -2.2 0.10" size="0.06" material="outdoor_flower_red" conaffinity="0" contype="0" group="1"/>
+        <geom name="outdoor_flower_29" type="sphere" pos="9.7 -0.2 0.11" size="0.07" material="outdoor_flower_white" conaffinity="0" contype="0" group="1"/>
+        <geom name="outdoor_flower_30" type="sphere" pos="8.6 1.8 0.10" size="0.06" material="outdoor_flower_yellow" conaffinity="0" contype="0" group="1"/>
+        <geom name="outdoor_flower_31" type="sphere" pos="9.5 4.0 0.10" size="0.06" material="outdoor_flower_orange" conaffinity="0" contype="0" group="1"/>
+        <geom name="outdoor_flower_32" type="sphere" pos="8.8 6.2 0.11" size="0.07" material="outdoor_flower_pink" conaffinity="0" contype="0" group="1"/>
+    </worldbody>
+</mujoco>

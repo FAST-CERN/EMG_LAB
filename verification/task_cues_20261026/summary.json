@@ -1,0 +1,11 @@
+{
+  "version": "2026.10.26-classroom.2",
+  "date": "2026-10-26",
+  "tests": 119,
+  "failures": 0,
+  "robot7_ui": "passed",
+  "visual_check": "seven classes, preparation and active phases; body-frame arrow rotations; training/inference selectors",
+  "dependency_changes": false,
+  "physical_device_test": "not run",
+  "velocity_or_scoring_changes": false
+}

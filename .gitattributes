@@ -1,0 +1,10 @@
+*.py text eol=lf
+*.json text eol=lf
+*.md text eol=lf
+*.txt text eol=lf
+*.cmd text eol=crlf
+# Preserve upstream SDK formatting; lint application sources separately.
+vendor/** -whitespace
+vendor/** -text
+assets/** -text
+drivers/cometa/Win10/** -text

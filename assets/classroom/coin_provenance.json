@@ -1,0 +1,13 @@
+{
+  "source": "User-provided Downloads/direction_labelling_demo.zip",
+  "asset_paths": [
+    "assets/models/meshes/bsi_coin.obj",
+    "assets/textures/coin/bsi_coin.png"
+  ],
+  "presenter_source": "src/direction_labelling/coin_presenter.py",
+  "note": "Coin geometry, texture and animation reused. Existing classroom locomotion/physics retained; reference qpos playback not used. Distribution rights must follow the original asset terms.",
+  "sha256": {
+    "bsi_coin.obj": "326924473fc4230e72510ceff796a71b5e3e351b199de25686ef1efaeadcf319",
+    "bsi_coin.png": "f784bad1e8f4d416cab6e1999c71f7805891a4a54e1a456a5d8906de76b3a8a9"
+  }
+}

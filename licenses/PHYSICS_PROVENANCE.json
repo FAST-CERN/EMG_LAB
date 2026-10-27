@@ -1,0 +1,38 @@
+{
+  "purpose": "Classroom EMG shared physical scene, ported from the independent Windows G1 four-command validation demo",
+  "controller": "NVIDIA Decoupled WBC Balance/Walk, original pretrained ONNX weights",
+  "nvidia": {
+    "repository": "https://github.com/NVlabs/GR00T-WholeBodyControl",
+    "revision": "45c03facbf848e0c743091b7d9c17952096ff908",
+    "reference_files": [
+      "decoupled_wbc/sim2mujoco/scripts/run_mujoco_gear_wbc.py",
+      "decoupled_wbc/sim2mujoco/resources/robots/g1/g1_gear_wbc.yaml"
+    ],
+    "asset_hashes": "assets/manifest.json",
+    "code_license": "licenses/NVIDIA-LICENSE.txt",
+    "weight_license": "licenses/NVIDIA-Open-Model-License.txt",
+    "robot_description_origin": "Unitree Robotics; see licenses/G1-upstream-README.md"
+  },
+  "teleopit": {
+    "repository": "https://github.com/FAST-CERN/Teleopit",
+    "revision": "a1a04e041282d5b14da2ed04d92ad975dc420102",
+    "reference_files": [
+      "teleopit/policies/decoupled/params.py",
+      "teleopit/policies/decoupled/observation.py",
+      "teleopit/policies/decoupled/runtime.py",
+      "teleopit/sim/decoupled_session.py",
+      "teleopit/configs/decoupled_sim.yaml"
+    ],
+    "license": "licenses/Teleopit-Apache-2.0.txt"
+  },
+  "adaptations": [
+    "CPU-only ONNX Runtime, one inference thread, no PyTorch/CUDA/ROS/DDS dependency",
+    "Cue-driven and classification-driven Qt scene with a worker-owned MuJoCo physics/rendering loop",
+    "Same 86D observations, six-frame history, original scaling and PD gains",
+    "Original lower-body policy output including waist; zero upper-body PD targets",
+    "Bounded command acceleration and straight-motion heading feedback inspired by Teleopit",
+    "Explicit STOP, stale-command timeout, ready-after-standing signal, and fall detection",
+    "Scene closing ends the experiment and finalizes captured data; keyboard commands are reserved for the standalone prototype",
+    "No motion clips, policy retraining, EMG recording format or DDS protocol changes"
+  ]
+}

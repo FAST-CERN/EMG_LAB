@@ -1,0 +1,77 @@
+{
+  "version": "coin_race_v2",
+  "official_seeds": [
+    20261025,
+    20261026,
+    20261027
+  ],
+  "count": 6,
+  "limit_s": 120.0,
+  "fixed_velocities": [
+    [
+      0.0,
+      0.0,
+      0.0
+    ],
+    [
+      0.0,
+      0.0,
+      1.0
+    ],
+    [
+      0.0,
+      0.0,
+      -1.0
+    ],
+    [
+      0.6,
+      0.0,
+      0.0
+    ],
+    [
+      -0.4,
+      0.0,
+      0.0
+    ],
+    [
+      0.0,
+      0.4,
+      0.0
+    ],
+    [
+      0.0,
+      -0.4,
+      0.0
+    ]
+  ],
+  "ranking": "unified",
+  "velocity_limits": {
+    "basic": {
+      "forward": 0.6,
+      "backward": 0.4,
+      "lateral": 0.4,
+      "yaw": 1.0,
+      "translation_norm": 0.6,
+      "shape": "axis_clip_then_xy_norm",
+      "slew_limits": [
+        1.5,
+        1.5,
+        2.5
+      ]
+    },
+    "advanced": {
+      "forward": 0.8,
+      "backward": 0.6,
+      "lateral": 0.6,
+      "yaw": 1.2,
+      "translation_norm": 0.8,
+      "shape": "axis_clip_then_xy_norm",
+      "slew_limits": [
+        1.5,
+        1.5,
+        2.5
+      ]
+    }
+  },
+  "advanced_access": "teacher_reviewed_model_hashes"
+}

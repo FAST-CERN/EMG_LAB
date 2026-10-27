@@ -1,0 +1,168 @@
+{
+  "host_branch": "origin/Bugfix/standing",
+  "host_commit": "e96757c79e1e5a2e02880138637382104d1d530b",
+  "training_branch": "3D_Model_Develop",
+  "training_commit": "eafcdc9",
+  "dds_source": "origin/dev-hp:vendor/dds (dependency only)",
+  "extracted_files_sha256": {
+    "vendor/cometa/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "vendor/cometa/cometa_emg.py": "78b4afd96af0cfbc2609a37f28f902ff16ee913934e5fdee23c9880475e12125",
+    "vendor/cometa/pyemg_cometa/__init__.py": "b95f0e2fe3e0647049cbc2ba5fe8b325b15fe72a494dde6d56e9f7287d23d008",
+    "vendor/cometa/pyemg_cometa/capture_configuration.py": "3a314a79cfcd396d2bf53356bb701c5e0aa17dcca8abed9c46ed217325de30e9",
+    "vendor/cometa/pyemg_cometa/constants.py": "ae1aaa462e4acbae4f301fcb1af52e23e59559ef0d6713f99913c5008f430b63",
+    "vendor/cometa/pyemg_cometa/daq_system.py": "88cde9930038526c91f260abee0c52b8f937523bb8106771eddeff11bf850486",
+    "vendor/cometa/pyemg_cometa/device_dependent_functionalities.py": "fe1a72601936d435465bec1c44e2681ff5a1c094096a691da7923533c065a392",
+    "vendor/cometa/pyemg_cometa/event_args.py": "058f1d09e6c3061c08a8fbbe332306ffca6e48e995c45a60866c66b99219bab9",
+    "vendor/cometa/pyemg_cometa/foot_sw_transducer.py": "06ef768d5ef164d735ca7123d56d20af39228e7a96d58341b78d22c352604c04",
+    "vendor/cometa/pyemg_cometa/lib/CyUSB.dll": "dea98bfb8b06f8c28fd185d527fbcb2fd1f88a768e58e9e2e5f022e0579fcabb",
+    "vendor/cometa/pyemg_cometa/lib/Waveplus.DaqSys.dll": "0d199aa32fea95a0e6e4d90a919418caf24f679c95ed954eb7da02c437cb8647",
+    "vendor/cometa/pyemg_cometa/lib/Waveplus.DaqSysInterface.dll": "0d17c4c87a00793710e3eaf5788cbf3dfd4f2476128c17532760c6145b296c67",
+    "vendor/cometa/pyemg_cometa/sensor_configuration.py": "d3716788cb629cc2a71a56c0396d89160c982e1c305b70fc6c3695b21a5aa78f",
+    "vendor/cometa/pyemg_cometa/version.py": "1b8bf9f37d50c518cf11294417dbb4d757e601dca834b74823135902c9d5756b",
+    "vendor/delsys/__init__.py": "ad857070300c4f4c8bbe23ad8a9135bcbccf439d3c40979ffefbd1a3e9f1dbcf",
+    "vendor/delsys/delsys.runtimeconfig.json": "4e0d2702e9772de0a69eb7ec402416e75c174c78fd4b3aade35414269e0cfade",
+    "vendor/delsys/delsys_emg.py": "35b11b69109e2deef789c954b391ad8d3c291d571d1b46c691bbfa3bf0cf2255",
+    "vendor/delsys/resources/BoostMathLib.dll": "169f037f4a4b764548b122cfbb950682069bb21d677674a7996faffc3bd0df9e",
+    "vendor/delsys/resources/BouncyCastle.Crypto.dll": "ff3e359c24f44ad8f860cd445d3d72fcf3905d54b09521691175cfa5996c7d42",
+    "vendor/delsys/resources/CentroUSB_32.dll": "cfc63cfe348831795f64baa55302d5623b475494a54cb998221ebc6e931eb6f5",
+    "vendor/delsys/resources/CentroUSB_64.dll": "7a7c6730cd0ce9f2e279579b6156ee8dd9dc3500e07be0204ba65b733b565fb7",
+    "vendor/delsys/resources/CoreCompat.Portable.Licensing.dll": "9cd68ba983067616b05ca3bd9afce97843c9aef64f0f19044dfad72d699ef8ba",
+    "vendor/delsys/resources/Delsys.TrignoLite_32.dll": "644bef3686cd304bc6d764004572986e5644c15806f60f88119c0edbcc50b9f5",
+    "vendor/delsys/resources/Delsys.TrignoLite_64.dll": "b9437232cfb2254e4d82dee7730f9fefab6ba1e94d413fa03d8bac7616d737cd",
+    "vendor/delsys/resources/DelsysAPI.dll": "a97f55cc2234e4d34f6a7eafd4ace69cd50572a27cced9f39bd8e85809779802",
+    "vendor/delsys/resources/MathNet.Filtering.dll": "4ee0cd8fc6d18f3650e680b24ce3d8de0d7c99611e917151894d083fe3d296b4",
+    "vendor/delsys/resources/MathNet.Numerics.dll": "3449d19eb528ac121fb36c1639d4a19568198bdaa8adc5c837046d3f16e5357e",
+    "vendor/delsys/resources/Microsoft.Extensions.Logging.Abstractions.dll": "d4ddc3353820b50561a6c4eb63d096ca13f093349141d7c81e07a18075697f80",
+    "vendor/delsys/resources/Microsoft.Extensions.Logging.dll": "183650081b551dfad967a7cbf79946a229cb79458b8d04a12db7c44b03bb9ab7",
+    "vendor/delsys/resources/Newtonsoft.Json.dll": "8c1dd5c184b4e2e7ead06971ff3ebcb46783be972292d1deb1061744369b4d80",
+    "vendor/delsys/resources/Plugin.BLE.Abstractions.dll": "4c97d2b7d0a76019664bcaeeb031a93f76518fd2841920c423d3f9f01d35dde8",
+    "vendor/delsys/resources/Plugin.BLE.dll": "483bae3424a7d5a85f2caddc2c0fa42d587c1cf6103ecce217e1b8b9a1b6aecf",
+    "vendor/delsys/resources/Portable.Licensing.dll": "eeefb0576b432aa432a7d4ce8ce378ed04554f291c0e1b46320dcfe291863503",
+    "vendor/delsys/resources/RJCP.Core.Environment.dll": "1c2d3fd4c493ec5142e9181f93f50f06405088ab8f9571dd490fd08975f0ac37",
+    "vendor/delsys/resources/RJCP.Core.SysCompat.dll": "c01eabb55f2992ec8c3055094be0020d1395d2b2713a1464b1c3818e8fc5a785",
+    "vendor/delsys/resources/RJCP.Diagnostics.Trace.dll": "4603fb5524114a2de62093c2a64376716e611a7e0044fb3d9596ec9a025dd2ce",
+    "vendor/delsys/resources/RJCP.IO.Buffer.dll": "90c164dc410cc079c945861dc99e8e534ad8ff75fda3ad65c64940bf178bbd48",
+    "vendor/delsys/resources/RJCP.IO.Device.dll": "a70f9c7ff7d8a4bcd9bcc71b90c73a4b8abfe449992666610ce6d5e686de371e",
+    "vendor/delsys/resources/RJCP.SerialPortStream.dll": "2865dc290635e073039a4dcdf79af17d8fb4d1722c334870510748192da69980",
+    "vendor/delsys/resources/SiUSBXp_32.dll": "d206ff670a4a3baed4c4ecbdb99e087310733a92e326e2fa72ffedde35adc5e5",
+    "vendor/delsys/resources/SiUSBXp_64.dll": "807cadfdfb41343ad1785d9012d1cab6fc4ad0d7645ff7eefb39ae76050303bd",
+    "vendor/delsys/resources/Signals.dll": "01684764f56700ae533fde2b3eaa67ccde72c134077d57d133e587aae7ae21ac",
+    "vendor/delsys/resources/Stateless.dll": "ae01f87ce7c29eb8d5a0ae39a27fc3dafddf305f7836c304bb7a0dcef7b03c69",
+    "vendor/delsys/resources/System.IO.Ports.dll": "772ca44331e1bc0e07575f654cd6db7f01b43a9dac7f868728f27b98746ea381",
+    "vendor/delsys/resources/System.Management.dll": "1ec7837b8c7f3098c4549f7fd06136bd4ff7cad39e807fa0bea9d2ba48281e85",
+    "vendor/delsys/resources/TrignoLite.dll": "dd46a7f5e4c3b077e04f79479040fde27c5b9ae832638de6315c297b42bb972c",
+    "vendor/delsys/resources/libSiUSBXp.so": "e325e2410162dd4693f3a37982b416d93f3c426f15c9a5a134f16b659a18618d"
+  },
+  "changes": [
+    "Delsys credentials moved to ignored local/delsys.json",
+    "Training: extracted LiteCNN1D, preserved semantic class order; new EMG-specific pipeline and single-channel support"
+  ],
+  "classroom_changes": [
+    "Delsys embedded SDK license moved into ignored local/delsys.json and environment variables.",
+    "Cometa/Delsys receive on_error callbacks; Cometa no longer silently discards queued frames.",
+    "Delsys sample alignment buffers surplus channel samples in emg_lab/alignment.py.",
+    "LiteCNN1D_channels_v2 preserves the sensor dimension before extracting features; EMG training and train-only normalization are implemented separately.",
+    "Raw EMG uses source binary header layout; labels use sample indices and JSON stores exact sample rate.",
+    "Classroom UX revision: one session per .emg archive; each trial contains forward/rest/left/right once; whole-trial training with optional holdout; legacy recordings retained.",
+    "2026-10-16: fixed default waveform axes with shared device/capture display settings; waveform-first collection pages and separate neutral-pose Revo2 capture window; pinned action bars and collapsible settings; idle real-hand/DDS connection before inference, output enable/stop separate from connection, retained stop errors; offline lifecycle and GUI validation."
+  ],
+  "private_packages": {
+    "bsi_pykit_base-0.4.1-py3-none-any.whl": "15506c37aabb3436411dd0824d899707bbfac507b3ac01b1ab06c24624ccc3a1",
+    "bsi_robot_base-0.1.2-py3-none-any.whl": "5dd48d7e86ecb91e6c68f30749448e50428b0d65115a3acd5d0c9cae7ae8b5f4"
+  },
+  "private_package_origin": "Internal Nexus pypi-group; authentication is not stored in this repository.",
+  "waveform_preview": {
+    "reference": "origin/Bugfix/standing:ui/waveform/emg_waveform_plot.py and ui/preview/signal_preview_utils.py",
+    "implementation": "emg_lab/waveform.py",
+    "adaptations": [
+      "Two-column per-sensor plots with numeric amplitude axes; no host event bus or hardware-manager dependency",
+      "Time window in seconds, shared/individual/fixed amplitude ranges, raw/filtered overlay and display-only pause",
+      "Preserve signal amplitudes and source unit labels; peak downsampling only affects drawing"
+    ]
+  },
+  "robot_scene": {
+    "implementation": "emg_lab/physics; local copy of the validated g1_physics_demo controller, no runtime sibling dependency",
+    "controller": "NVIDIA Decoupled WBC Balance/Walk, CPU ONNX, unchanged pretrained weights",
+    "provenance": "licenses/PHYSICS_PROVENANCE.json",
+    "asset_hashes": "assets/manifest.json",
+    "default_forward_mps": 0.6,
+    "default_turn_radps": 0.8,
+    "changes": [
+      "Shared physical scene for cue-driven collection and stable-classification-driven live/replay inference",
+      "Asynchronous loading and standing before collection or replay starts; closing/failure ends and saves the experiment",
+      "Only fresh predictions renew the command watchdog; no keyboard overrides during EMG experiments",
+      "Fixed rest countdown to use the current action segment; class IDs, data format and DDS mapping unchanged",
+      "Restored source outdoor visuals, exact third-person camera parameters and position/heading smoothing; robot physics and policy assets unchanged.",
+      "Copied source cue textures and meshes; adapted GroundCuePresenter to append to the offscreen scene without clearing the world. Bundled countdown badges use the source renderer.",
+      "Default acquisition now preparation 3 s / active 3 s / extra rest 0 s. Preparation shows 3, 2, 1, then 0 for its last 0.3 s; active-only ground cues use the same sample-clock phase as labels."
+    ],
+    "environment_reference": "bsi_robot_base==0.1.2 simulator/robot_direction/assets/model/outdoor_15m_scene.xml",
+    "environment_hashes": "assets/classroom/provenance.json"
+  },
+  "default_comparison": {
+    "source_host_new_model_epochs": 20,
+    "source_host_missing_field_template_epochs": 100,
+    "source_backend_missing_epoch_parameter": 5,
+    "classroom_epochs": 30,
+    "source_robot_action_timing_seconds": [
+      3,
+      3,
+      0
+    ],
+    "classroom_action_timing_seconds": [
+      3,
+      3,
+      0
+    ],
+    "note": "The source backend accepts page-specified epochs and trainable timestamp intervals, without controlling capture timing. Source trials are individual actions; classroom trials contain all four actions by design."
+  },
+  "emg_model_fix": {
+    "date": "2026-10-14",
+    "source": "seeg_decode/3D_Model_Develop@eafcdc9:training_server/algorithm/model.py:LiteCNN1D",
+    "source_projection": "num_channels -> num_channels//2",
+    "initial_adaptation": "max(1,num_channels//2) for single-channel support; two channels still collapsed to one",
+    "current_projection": "num_channels -> num_channels -> 16 feature channels",
+    "architecture": "LiteCNN1D_channels_v2",
+    "cause": "Premature mixing of two independent muscles confused one-sided and simultaneous activation; argmax-only evaluation hid command gating failures.",
+    "evaluation": "Exported ONNX is replayed with the deployed InferencePipeline; score held-out action windows only, preserving continuous filter and gate context.",
+    "compatibility": "Existing ONNX and metadata preserved; old scores explicitly labelled as window-only evaluation."
+  },
+  "hand_integration_20261016": {
+    "task_type": "HAND_COMMAND_3CLASS",
+    "classes": [
+      "rest",
+      "open",
+      "close"
+    ],
+    "speed_percent_per_second": 75,
+    "thumb_default_degrees": [
+      24,
+      30
+    ],
+    "driver_origin": "Local Revo2 USB validation tools developed in this task; ported into emg_lab/hand/driver with relative imports",
+    "model_repository": "https://github.com/BrainCoTech/revo2_description",
+    "model_commit": "92cc697c7fa691db59404ce52344f3969a5ef7a6",
+    "validation": "Offline only during integration; physical hand powered off",
+    "changed_pipeline": "Target-specific capture, metadata, class counts, whole-trial training/evaluation, ONNX inference, CSV output and shared Qt workflow"
+  },
+  "classroom_release": {
+    "version": "2026.10.26-classroom.2",
+    "date": "2026-10-26",
+    "local_changes": [
+      "seven-class Chinese badges and body-frame arrows",
+      "synchronized task selectors",
+      "registered task probability displays"
+    ],
+    "synthetic_examples": "examples/模拟示例包; deterministic simulated signals, not human EMG",
+    "verification": "verification/task_cues_20261026/summary.json"
+  },
+  "offline_distribution": {
+    "date": "2026-10-26",
+    "changes": [
+      "统一应用源码换行并同步比赛字节校验基准，未改变算法、运控或评分规则。",
+      "加入 Cometa 原厂 x64 USB 驱动和安装说明。",
+      "合成示例元数据移除本机绝对路径，保持原始训练源码指纹。",
+      "清理个人数据、环境、日志和凭据，完整运行环境通过本地离线包分发。"
+    ]
+  }
+}

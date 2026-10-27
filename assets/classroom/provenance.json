@@ -1,0 +1,63 @@
+{
+  "source_wheel": "bsi_robot_base-0.1.2-py3-none-any.whl",
+  "source_wheel_sha256": "5dd48d7e86ecb91e6c68f30749448e50428b0d65115a3acd5d0c9cae7ae8b5f4",
+  "files": {
+    "outdoor_15m_scene.xml": {
+      "source": "bsi_robot_base/simulator/robot_direction/assets/model/outdoor_15m_scene.xml",
+      "sha256": "ba8cab5f31d1a5a1237803164fcd180fe1533568a51c0febb81f1abb0210dfa3"
+    },
+    "cue_forward.png": {
+      "source": "bsi_robot_base/simulator/robot_direction/assets/model/cue_forward.png",
+      "sha256": "3ea372b0f693ed1a00918aae2a739ba605f088c52c7408d9137eb865fc0f84c2"
+    },
+    "cue_rest.png": {
+      "source": "bsi_robot_base/simulator/robot_direction/assets/model/cue_rest.png",
+      "sha256": "ad1b201684818ec98212ab48fda6edae26960c65df6ee700105f5f2d69b2ed4a"
+    },
+    "cue_left.png": {
+      "source": "bsi_robot_base/simulator/robot_direction/assets/model/cue_left.png",
+      "sha256": "0a709fbe1a50a731478ed3bd9856ce063bba3f0c8d2f9175a11a86cb5fbf03e2"
+    },
+    "cue_right.png": {
+      "source": "bsi_robot_base/simulator/robot_direction/assets/model/cue_right.png",
+      "sha256": "6b3c54e366d59f779bea98632d0355d109f9fc90a0b5688da58daae3eb5854ed"
+    },
+    "arrow_forward.obj": {
+      "source": "bsi_robot_base/simulator/robot_direction/assets/model/meshes/arrow_forward.obj",
+      "sha256": "1dce348fc6e8482b8464a2f61c36d94635e48641f9c82dc7d2a215d94b076e74"
+    },
+    "pause_bars.obj": {
+      "source": "bsi_robot_base/simulator/robot_direction/assets/model/meshes/pause_bars.obj",
+      "sha256": "262e55cff3583fe1a08cd8155f8af7cda172162867f9bddcab45ca7d868ea14c"
+    },
+    "arrow_turn_left.obj": {
+      "source": "bsi_robot_base/simulator/robot_direction/assets/model/meshes/arrow_turn_left.obj",
+      "sha256": "1e62eec8ad912ca90affe0cb640bb8a20848543ce7da6d11425faf874ea621e4"
+    },
+    "arrow_turn_right.obj": {
+      "source": "bsi_robot_base/simulator/robot_direction/assets/model/meshes/arrow_turn_right.obj",
+      "sha256": "9ab4cd67e28d57f5b765433c31b8fad4f6fcd4d6dab47c714b037faf3d810ba5"
+    },
+    "countdown_0.png": {
+      "generated_by": "bsi_robot_base/simulator/robot_direction/countdown_textures.py:generate_countdown_textures([0,1,2,3])",
+      "sha256": "5f9ec7f8a6b27da5557645ce5aa0577b23c13c1e2a886dbcc736d4544885c59e"
+    },
+    "countdown_1.png": {
+      "generated_by": "bsi_robot_base/simulator/robot_direction/countdown_textures.py:generate_countdown_textures([0,1,2,3])",
+      "sha256": "bac2f95b5d9350e20d29390adab3fbc429f40b2bdea6bc92f9c6b9ba6dee2567"
+    },
+    "countdown_2.png": {
+      "generated_by": "bsi_robot_base/simulator/robot_direction/countdown_textures.py:generate_countdown_textures([0,1,2,3])",
+      "sha256": "0f7abb0e3ec890ba163d08ed8d95dc52aa65a56ab6096e8ca30b9f1168f4ced3"
+    },
+    "countdown_3.png": {
+      "generated_by": "bsi_robot_base/simulator/robot_direction/countdown_textures.py:generate_countdown_textures([0,1,2,3])",
+      "sha256": "06635f1c707a94e42ac814770846bbe85122a20bac85972123cc1397d1b4f742"
+    }
+  },
+  "code_reference": [
+    "bsi_robot_base/simulator/robot_direction/camera.py",
+    "bsi_robot_base/simulator/robot_direction/ground_cue_presenter.py",
+    "bsi_robot_base/simulator/robot_direction/runtime.py"
+  ]
+}

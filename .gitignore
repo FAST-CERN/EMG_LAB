@@ -1,0 +1,16 @@
+.venv/
+.runtime/
+wheelhouse/
+__pycache__/
+.pytest_cache/
+data/
+local/
+*.log
+dist/
+build/
+*.egg-info/
+.env
+.env.*
+!.env.example
+Thumbs.db
+.DS_Store

@@ -1,0 +1,190 @@
+; Installation INF for the EMG and Motion Device USB Driver for Windows 10
+; Processor support for x64 platforms.
+;
+;
+
+[Version]
+Signature="$WINDOWS NT$"
+Class=USB
+ClassGUID={36FC9E60-C465-11CF-8056-444553540000}
+provider=%CYUSB3_Provider%
+CatalogFile=EmgMUsb.cat
+DriverVer=05/06/2017,3.1.0.00
+
+[SourceDisksNames]
+1=%CYUSB3_Install%,,,
+
+[SourceDisksFiles]
+EmgMUsb.sys = 1
+EmgMUsb.spt = 1
+
+[DestinationDirs]
+CYUSB3.Files.Ext = 10,System32\Drivers
+CYUSB3.Files.Spt = 10,System32\Cometa\EmgM
+
+[ControlFlags]
+ExcludeFromSelect = *
+
+[Manufacturer]
+%CYUSB3_Provider%=Device,NT,NTx86,NTamd64
+
+;for all platforms
+[Device.NT]
+%VID_04B4&PID_1004.DeviceDesc%=CyUsb3, USB\VID_04B4&PID_1004
+%VID_04B4&PID_1002.DeviceDesc%=Daq, USB\VID_04B4&PID_1002
+
+;for x86 platforms
+[Device.NTx86]
+%VID_04B4&PID_1004.DeviceDesc%=CyUsb3, USB\VID_04B4&PID_1004
+%VID_04B4&PID_1002.DeviceDesc%=Daq, USB\VID_04B4&PID_1002
+
+;for x64 platforms
+[Device.NTamd64]
+%VID_04B4&PID_1004.DeviceDesc%=CyUsb3, USB\VID_04B4&PID_1004
+%VID_04B4&PID_1002.DeviceDesc%=Daq, USB\VID_04B4&PID_1002
+
+[Daq.NT]
+CopyFiles=CYUSB3.Files.Ext
+CopyFiles=CYUSB3.Files.Spt
+AddReg=CyUsb3.AddReg
+
+[Daq.NT.HW]
+AddReg=Daq.AddReg.Guid
+[Daq.NT.Services]
+Addservice = CYUSB3, 2, CYUSB3.AddService
+
+[Daq.NTx86]
+CopyFiles=CYUSB3.Files.Ext
+CopyFiles=CYUSB3.Files.Spt
+AddReg=CyUsb3.AddReg
+
+[Daq.NTx86.HW]
+AddReg=Daq.AddReg.Guid
+
+[Daq.NTx86.Services]
+Addservice = CYUSB3,2,CYUSB3.AddService
+
+[Daq.NTamd64]
+CopyFiles=CYUSB3.Files.Ext
+CopyFiles=CYUSB3.Files.Spt
+AddReg=CyUsb3.AddReg
+
+[Daq.NTamd64.HW]
+AddReg=Daq.AddReg.Guid
+
+[Daq.NTamd64.Services]
+Addservice = CYUSB3,2,CYUSB3.AddService
+
+[Daq.AddReg.Guid]
+HKR,,DriverGUID,,%CYUSB3.GUID%
+
+[CYUSB3.NT]
+CopyFiles=CYUSB3.Files.Ext
+CopyFiles=CYUSB3.Files.Spt
+AddReg=CyUsb3.AddReg
+
+[CYUSB3.NT.HW]
+AddReg=CYUSB3.AddReg.Guid
+
+[CYUSB3.NT.Services]
+Addservice = CYUSB3,2,CYUSB3.AddService
+
+[CYUSB3.NTx86]
+CopyFiles=CYUSB3.Files.Ext
+CopyFiles=CYUSB3.Files.Spt
+AddReg=CyUsb3.AddReg
+
+[CYUSB3.NTx86.HW]
+AddReg=CYUSB3.AddReg.Guid
+
+[CYUSB3.NTx86.Services]
+Addservice = CYUSB3,2,CYUSB3.AddService
+
+[CYUSB3.NTamd64]
+CopyFiles=CYUSB3.Files.Ext
+CopyFiles=CYUSB3.Files.Spt
+AddReg=CyUsb3.AddReg
+
+[CYUSB3.NTamd64.HW]
+AddReg=CYUSB3.AddReg.Guid
+
+[CYUSB3.NTamd64.Services]
+Addservice = CYUSB3,2,CYUSB3.AddService
+
+[CYUSB3.AddReg]
+; Deprecating - do not use in new apps to identify a CYUSB3 driver
+HKR,,DevLoader,,*ntkern
+HKR,,NTMPDriver,,EmgMUsb.sys
+; You may optionally include a check for DriverBase in your application to check for a CYUSB3 driver
+HKR,,DriverBase,,EmgMUsb.sys
+HKR,"Parameters","MaximumTransferSize",0x10001,4096
+HKR,"Parameters","DebugLevel",0x10001,2
+HKR,,FriendlyName,,%CYUSB3_Description%
+
+[CYUSB3.AddService]
+DisplayName    = %CYUSB3_Description%
+ServiceType    = 1                  ; SERVICE_KERNEL_DRIVER
+StartType      = 3                  ; SERVICE_DEMAND_START
+ErrorControl   = 1                  ; SERVICE_ERROR_NORMAL
+ServiceBinary  = %10%\System32\Drivers\EmgMUsb.sys
+AddReg         = CYUSB3.AddReg
+LoadOrderGroup = Base
+
+[CYUSB3.Files.Ext]
+EmgMUsb.sys
+
+[CYUSB3.Files.Spt]
+EmgMUsb.spt
+
+[CYUSB3.AddReg.Guid]
+HKR,,DriverGUID,,%CYUSB3.GUID%
+;HKR,,DriverPowerPolicySetup,,%ENABLE_DRIVER_POWER_POLICY%
+
+HKR,,DriverEXECSCRIPT,,%CYUSB3.EXECSCRIPT%
+
+;-------------- WDF Coinstaller installation
+[SourceDisksFiles]
+WdfCoInstaller01011.dll=1 ; make sure the number matches with SourceDisksNames
+
+[DestinationDirs]
+CoInstaller_CopyFiles = 11
+
+[CYUSB3.NTamd64.CoInstallers]
+AddReg=CoInstaller_AddReg
+CopyFiles=CoInstaller_CopyFiles
+
+[CYUSB3.NTx86.CoInstallers]
+AddReg=CoInstaller_AddReg
+CopyFiles=CoInstaller_CopyFiles
+
+[CoInstaller_CopyFiles]
+WdfCoInstaller01011.dll
+
+[CoInstaller_AddReg]
+HKR,,CoInstallers32,0x00010000, "WdfCoInstaller01011.dll,WdfCoInstaller"
+
+[CYUSB3.NTamd64.Wdf]
+KmdfService = CYUSB3, CYUSB3_wdfsect
+
+[CYUSB3.NTx86.Wdf]
+KmdfService = CYUSB3, CYUSB3_wdfsect
+
+[CYUSB3_wdfsect]
+KmdfLibraryVersion = 1.11
+
+[Strings]
+CYUSB3_Provider    = "Cometa"
+CYUSB3_Company     = "Cometa Srl"
+CYUSB3_Description = "EMG and Motion USB Driver"
+CYUSB3_DisplayName = "EMG and Motion Driver"
+CYUSB3_Install     = "EMG and Motion USB Driver Installation"
+
+VID_04B4&PID_1004.DeviceDesc="Co Generic USB Device"
+VID_04B4&PID_1002.DeviceDesc="EMG and Motion Device"
+
+CYUSB3.GUID="{7ADB03CB-8700-46fb-93C8-8F152D7BD4F7}"
+
+;ENABLE_DRIVER_POWER_POLICY="1"
+CYUSB3_Unused      = "."
+
+CYUSB3.EXECSCRIPT="\systemroot\system32\Cometa\EmgM\EmgMUsb.spt"
