@@ -59,7 +59,7 @@ def test_cancel_is_noop_and_active_tasks_block_transfers(window, tmp_path, monke
     monkeypatch.setattr(W.QFileDialog, 'getOpenFileNames', lambda *a, **k: ([], ''))
     window.import_record()
     assert not window.session.root.exists()
-    window.training = object()
+    window.backend._training = object()
     try:
         window.update_controls()
         for item in (window.library.import_button, window.library.export_button, window.library.bundle_button):
@@ -69,7 +69,7 @@ def test_cancel_is_noop_and_active_tasks_block_transfers(window, tmp_path, monke
         with pytest.raises(ValueError, match='结束'):
             window.export_model()
     finally:
-        window.training = None
+        window.backend._training = None
 
 
 def test_replay_import_is_persistent_and_export_available(window, tmp_path, profile, monkeypatch):

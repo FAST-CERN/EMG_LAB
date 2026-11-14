@@ -83,7 +83,7 @@ def test_formal_rejects_mock_and_replay_before_baseline():
 def test_baseline_detects_code_assets_and_speed_table_changes(tmp_path):
     (tmp_path/'emg_lab').mkdir()
     (tmp_path/'emg_lab/runner.py').write_text('original')
-    for name in ('main.py','requirements.txt'):(tmp_path/name).write_text('')
+    for name in ('main.py','pyproject.toml','uv.lock'):(tmp_path/name).write_text('')
     write_json(tmp_path/'competition_rules.json',load_rules())
     write_json(tmp_path/'competition_approvals.json',dict(version=VERSION,entries=[]))
     write_json(tmp_path/'competition_baseline.json',dict(version=VERSION,runtime=runtime_versions(),files=protected_files(tmp_path)))

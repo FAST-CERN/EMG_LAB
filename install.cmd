@@ -1,6 +1,11 @@
 @echo off
 setlocal
 cd /d "%~dp0"
+if exist "OFFLINE_RELEASE.json" (
+  ".runtime\python313\tools\python.exe" scripts\offline_bootstrap.py --repair
+  if errorlevel 1 exit /b 1
+  exit /b 0
+)
 rem Interpreter priority: bundled local runtime, then system Python, then pinned fetch.
 if not exist ".runtime\python313\tools\python.exe" (
   py -3.13 -c "" >nul 2>&1 || call scripts\fetch_runtime.cmd

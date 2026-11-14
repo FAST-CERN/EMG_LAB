@@ -4,6 +4,6 @@
 - `classroom_20261025`：此前的课堂流程与发行包验证。
 - `control_envelope_v2`：速度范围、固定指令与路线实验的原始仿真结果；方法和结论见 [速度实验记录](../docs/CONTROL_ENVELOPE_V2.md)。
 
-这些是软件和仿真验证，不代表真实肌电识别性能或真机控制验收。`examples/模拟示例包` 使用合成信号，仅用于熟悉导入、训练和回放。
+这些是软件和仿真验证，不代表真实肌电识别性能或真机控制验收。`scripts/smoke_pipeline.py` 使用合成信号，仅用于检查采集、训练和回放。
 
-自行复查：运行 `检查环境.cmd`；开发者可运行 `.venv\Scripts\python.exe -m pytest -q`。比赛基准须由教师审核保存，仓库中的校验文件本身不能阻止具有修改权限的人重新生成基准。
+自行复查：运行 `uv run python scripts/check_classroom.py --render`；开发者可运行 `uv run pytest -q`。比赛基准须由教师审核保存，仓库中的校验文件本身不能阻止具有修改权限的人重新生成基准。
