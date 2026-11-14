@@ -205,6 +205,20 @@ class ApplicationService:
     def save_notes(self, group, notes):
         collection.save_notes(self.root, group, self.task, notes)
 
+    def save_capture_plan(self, path, plan):
+        from emg_lab.contracts.acquisition import validate_plan
+
+        self.require_idle()
+        storage.write_json(path, validate_plan(plan))
+
+    def load_capture_plan(self, path):
+        from emg_lab.contracts.acquisition import validate_plan
+
+        self.require_idle()
+        if Path(path).stat().st_size > 1024 * 1024:
+            raise ValueError("方案文件过大。")
+        return validate_plan(storage.read_json(path))
+
     def signal_check(self, *args):
         return collection.signal_check(*args)
 
@@ -221,6 +235,10 @@ class ApplicationService:
         self.require_idle()
         if not entries or len({entry.task.task_type for entry in entries}) != 1:
             raise ValueError("一次操作请选择同一个实验目标的文件。")
+        if any(e.meta.get("capture_only") for e in entries):
+            raise ValueError(
+                "自定义采集仅用于保存和分析，尚未配置训练与机器人映射；请导出原始数据。"
+            )
         if action == "train":
             if any(e.kind != "recording" or not storage.usable_record(e.meta) for e in entries):
                 raise ValueError("训练只能选择至少包含一组完整动作的数据。")
@@ -319,6 +337,10 @@ class ApplicationService:
             raise ValueError("请先结束当前任务。")
         if not self.device_ready:
             raise ValueError("请先连接设备。")
+        if kwargs.get("capture_plan") is not None:
+            if self.task.key != "robot":
+                raise ValueError("自定义采集目前仅在机器人实验中提供。")
+            self.stop_scene()
         self._pending = None
         self._last_cue = None
         return self._session.start_capture(group, name, trial_count, action_s, **kwargs)
@@ -554,9 +576,9 @@ class ApplicationService:
                 snapshot = self._session.snapshot()
                 capture = snapshot["capture"]
                 if capture:
-                    if self._scene:
+                    if self._scene and not capture.get("capture_only"):
                         self._scene.update_capture(capture, self._scene.settings)
-                    if self._hand_scene:
+                    if self._hand_scene and not capture.get("capture_only"):
                         self._hand_scene.sample(capture)
                     cue = capture.get("command", 0)
                     if cue != self._last_cue:

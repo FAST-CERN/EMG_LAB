@@ -164,6 +164,10 @@ class RecordingWriter:
             for name in ("emg.bin", "labels.csv", "meta.json", "experiment.json"):
                 (self.folder / name).unlink(missing_ok=True)
             self.folder.rmdir()
+            if self.meta.get("capture_only"):
+                from .capture_index import write_capture_index
+
+                write_capture_index(self.output_path, self.meta)
 
 
 def recording_metadata(path):
@@ -212,6 +216,10 @@ def read_recording(folder):
             or not 0 <= label["start_sample"] < label["end_sample"] <= len(rows)
         ):
             raise ValueError("标签内容或采样点范围无效。")
+    if meta.get("capture_only"):
+        from emg_lab.contracts.acquisition import validate_recording_annotations
+
+        validate_recording_annotations(meta, labels)
     ordered = sorted(labels, key=lambda r: r["start_sample"])
     if any(a["end_sample"] > b["start_sample"] for a, b in zip(ordered, ordered[1:])):
         raise ValueError("数据中的动作标签有重叠，请重新选择数据。")

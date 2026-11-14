@@ -34,12 +34,17 @@ class CapturePage:
         self.task_choice.currentIndexChanged.connect(
             lambda: self.guard(lambda: self.choose_task(self.task_choice))
         )
-        settings.addLayout(fields(("任务方案", self.task_choice)))
-        settings.addWidget(
-            text_label(
-                "先采基础类别，再扩展类别。方案决定采集标签和匹配的模型；切换机器人/灵巧手请用右上角“切换实验”。"
-            )
+        self.capture_mode = W.QComboBox()
+        self.capture_mode.addItem("课程预设采集（四类 / 七类）", "standard")
+        self.capture_mode.addItem("自定义动作采集（不关联机器人）", "custom")
+        self.capture_mode.currentIndexChanged.connect(self.update_capture_mode)
+        settings.addLayout(fields(("采集方式", self.capture_mode)))
+        self.preset_task_field = fields(("任务方案", self.task_choice))
+        settings.addLayout(self.preset_task_field)
+        self.preset_hint = text_label(
+            "课程预设保留原有训练与控制流程；自定义采集可自由添加动作、力道与备注，稍后再研究映射。"
         )
+        settings.addWidget(self.preset_hint)
         self.group = W.QLineEdit("G01")
         self.group.setMaxLength(40)
         self.experiment = W.QLineEdit("方向控制练习")
@@ -67,13 +72,20 @@ class CapturePage:
         self.collection_notes_button = button(
             "采集记录…", lambda: self.guard(self.edit_collection_notes)
         )
-        settings.addLayout(
-            row(
-                self.collection_notes_button,
-                text_label("选填操作者、通道位置与动作约定；同一佩戴可沿用，随数据一起带走。"),
-                1,
-            )
+        self.legacy_notes_panel = W.QWidget()
+        legacy_notes_layout = row(
+            self.collection_notes_button,
+            text_label("选填操作者、通道位置与动作约定；同一佩戴可沿用，随数据一起带走。"),
+            1,
         )
+        self.legacy_notes_panel.setLayout(legacy_notes_layout)
+        settings.addWidget(self.legacy_notes_panel)
+        from emg_lab.frontend.custom_capture import CustomCaptureEditor
+
+        self.custom_capture = CustomCaptureEditor(self)
+        self.custom_capture.changed.connect(self.update_capture_plan)
+        settings.addWidget(self.custom_capture)
+        self.custom_capture.setVisible(False)
         self.capture_plan = text_label("")
         settings.addWidget(self.capture_plan)
         self.trial_count.valueChanged.connect(self.update_capture_plan)
@@ -114,23 +126,59 @@ class CapturePage:
         layout.addWidget(panel, 1)
         self.capture_start = button("开始采集并保存", lambda: self.guard(self.start_capture), True)
         self.capture_stop = button("提前结束并保存", self.stop_capture)
+        self.capture_next = button("下一步：训练模型 →", self.capture_next_step)
         self.page_actions["02  采集数据"].addLayout(
             row(
                 self.capture_start,
                 self.capture_stop,
                 1,
-                button(
-                    "下一步：训练模型 →",
-                    lambda: (self.refresh_data(), self.tabs.setCurrentIndex(2)),
-                ),
+                self.capture_next,
             )
         )
         self.name_preview()
         self.update_capture_plan()
 
+    def capture_next_step(self):
+        if self.custom_capture_active():
+            self.open_library("recording")
+        else:
+            self.refresh_data()
+            self.tabs.setCurrentIndex(2)
+
+    def custom_capture_active(self):
+        return self.task.key == "robot" and self.capture_mode.currentData() == "custom"
+
+    def update_capture_mode(self):
+        if not hasattr(self, "custom_capture"):
+            return
+        custom = self.custom_capture_active()
+        self.capture_mode.setVisible(self.task.key == "robot")
+        self.custom_capture.setVisible(custom)
+        self.page_titles["02  采集数据"].setText("自定义动作采集" if custom else "跟随提示，采集动作数据")
+        self.capture_next.setText("查看采集数据 →" if custom else "下一步：训练模型 →")
+        self.scene_check.setVisible(not custom)
+        self.legacy_notes_panel.setVisible(not custom)
+        self.task_choice.setEnabled(not custom)
+        self.task_choice.setVisible(not custom)
+        for index in range(self.preset_task_field.count()):
+            widget = self.preset_task_field.itemAt(index).widget()
+            if widget:
+                widget.setVisible(not custom)
+        if custom and self.backend.profile:
+            self.custom_capture.sync_channels()
+        self.name_preview()
+        self.update_capture_plan()
+        self.update_controls()
+
     def update_capture_plan(self):
         count = self.trial_count.value()
-        actions = len(self.task.classes)
+        if not hasattr(self, "capture_plan"):
+            return
+        actions = (
+            len(self.custom_capture.selected_ids())
+            if self.custom_capture_active()
+            else len(self.task.classes)
+        )
         seconds = round(
             count * actions * (self.action_seconds.value() + PREPARE_SECONDS + REST_SECONDS)
         )
@@ -144,6 +192,11 @@ class CapturePage:
             group, title = safe_name(self.group.text()), safe_name(self.experiment.text())
             self.path_preview.setText(
                 f"将保存为一份“{title}”数据，归入 {group}。时间和文件编号自动添加。"
+                + (
+                    " 自定义采集同时生成同名 .index.csv；动作名称与备注保存在原始文件内。"
+                    if self.custom_capture_active()
+                    else ""
+                )
             )
         except ValueError as exc:
             self.path_preview.setText(str(exc))

@@ -256,7 +256,13 @@ def describe(entry):
     if entry.kind == "recording":
         common += (
             f"时长：{m.get('duration', 0):.1f} 秒 · 完整动作组：{m.get('completed_trials', 0)} · "
-            + ("可用于训练" if usable_record(m) else "动作未采全，不能用于训练")
+            + (
+                "自定义采集 · 待离线分析与映射"
+                if m.get("capture_only")
+                else "可用于训练"
+                if usable_record(m)
+                else "动作未采全，不能用于训练"
+            )
             + "\n"
         )
     else:
@@ -280,4 +286,17 @@ def describe(entry):
             + "\n"
         )
         common += f"可用完整动作组：{m.get('usable_trials', 0)}\n"
+    if m.get("capture_only"):
+        plan = m["capture_plan"]
+        common += f"操作者：{plan.get('operator', '')} · 佩戴：{plan.get('wearing', '')}\n备注：{plan.get('notes', '')}\n"
+        for channel in plan["channels"]:
+            common += f"CH {channel['channel_id']}：{channel.get('muscle', '')} {channel.get('notes', '')}\n"
+        for condition in plan["conditions"]:
+            common += (
+                " · ".join(
+                    condition.get(key, "")
+                    for key in ("name", "body_part", "effort", "save_name", "notes")
+                )
+                + "\n"
+            )
     return common + f"编号：{entry.identity}\n位置：{entry.path}"

@@ -185,16 +185,29 @@ def import_recording(source, root, task):
     payload, meta = _record_payload(source, task)
     existing = _existing(root, payload, list_recordings, RECORD_MEMBERS, MAX_RECORD_BYTES)
     if existing is not None:
+        if meta.get("capture_only"):
+            from .capture_index import write_capture_index
+
+            write_capture_index(existing, meta)
         return ImportResult(existing, reused=True)
     destination = Path(root) / safe_name(meta["group"]) / "recordings"
     destination.mkdir(parents=True, exist_ok=True)
     output = _write_archive(payload, destination, meta["name"], ".emg")
+    if meta.get("capture_only"):
+        from .capture_index import write_capture_index
+
+        write_capture_index(output, meta)
     return ImportResult(output)
 
 
 def export_recording(source, destination, task):
     payload, meta = _record_payload(source, task)
-    return _write_archive(payload, destination, meta["name"], ".emg")
+    output = _write_archive(payload, destination, meta["name"], ".emg")
+    if meta.get("capture_only"):
+        from .capture_index import write_capture_index
+
+        write_capture_index(output, meta)
+    return output
 
 
 def import_model(source, root, task):

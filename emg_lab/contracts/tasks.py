@@ -14,6 +14,10 @@ class Task:
 
     @property
     def selector(self):
+        from .acquisition import CUSTOM_CAPTURE
+
+        if self.task_type == CUSTOM_CAPTURE:
+            return "custom_capture"
         return next(k for k, v in TASKS.items() if v == self)
 
     @property
@@ -68,6 +72,17 @@ HAND_RATE = 75  # percent of full finger travel per second, NOT percent of max s
 
 def task_from_metadata(meta):
     """Legacy files without a task identifier are robot recordings/models."""
+    from .acquisition import capture_task, is_custom_capture
+
+    if is_custom_capture(meta):
+        task = capture_task(meta.get("capture_plan"))
+        if (
+            meta.get("target") != "robot"
+            or meta.get("classes") != list(task.classes)
+            or meta.get("capture_only") is not True
+        ):
+            raise ValueError("自定义采集的动作编号与方案不一致。")
+        return task
     kind = meta.get("task_type", ROBOT.task_type)
     task = next((t for t in TASKS.values() if t.task_type == kind), None)
     if task is None or meta.get("target", task.key) != task.key:

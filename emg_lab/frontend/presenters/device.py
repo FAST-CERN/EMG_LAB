@@ -39,6 +39,8 @@ class DevicePresenter:
             )
             self.waveform.set_profile(profile)
             self.capture_waveform.set_profile(profile)
+            if self.custom_capture_active():
+                self.custom_capture.sync_channels()
             self.message("设备已连接。确认波形后，进入数据采集。")
         elif kind == "sensors":
             values = event["sensors"]

@@ -30,6 +30,8 @@ def prepare_dataset(recordings):
     ordered = [(recording_metadata(p).get("created_at", ""), str(p), Path(p)) for p in recordings]
     for _, _, folder in sorted(ordered):
         meta, raw, labels = read_recording(folder)
+        if meta.get("capture_only"):
+            raise ValueError("自定义采集尚未配置训练标签与控制映射，请先离线分析。")
         if not usable_record(meta):
             raise ValueError(f"“{meta['name']}”没有可用的完整动作组，请检查无效标记或补采。")
         digest = hashlib.sha256(raw.tobytes()).hexdigest()

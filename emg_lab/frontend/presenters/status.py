@@ -59,6 +59,10 @@ class StatusPresenter:
             self.collection_notes_button,
         ):
             widget.setEnabled(not task)
+        if hasattr(self, "custom_capture"):
+            self.custom_capture.setEnabled(not task)
+            self.capture_mode.setEnabled(not task)
+            self.task_choice.setEnabled(not task and not self.custom_capture_active())
         self.capture_start.setEnabled(self.backend.device_ready and not task)
         self.capture_stop.setEnabled(capture or pending == "sample")
         self.reject_trial_button.setEnabled(bool(capture))
@@ -191,14 +195,22 @@ class StatusPresenter:
             bool(status and not status["done"] and not status.get("rejected"))
         )
         if status:
-            self.scene.sample(status)
+            if not status.get("capture_only"):
+                self.scene.sample(status)
             self.capture_progress.setValue(round(status["progress"] * 1000))
             if status["done"]:
                 self.cue.setText("采集完成，正在保存…")
             else:
-                action = self.task.names[status["cue"]]
+                action = status.get(
+                    "cue_name",
+                    self.task.names[status["cue"]]
+                    if status["cue"] < len(self.task.names)
+                    else "动作",
+                )
                 if status["phase"] == "准备":
-                    name = "休息" if status["cue"] == 0 else action
+                    name = (
+                        "休息" if status["cue"] == 0 and not status.get("capture_only") else action
+                    )
                     self.cue.setText(f"准备：{name}  {preparation_countdown(status)}")
                 elif status["phase"] == "动作":
                     self.cue.setText(
@@ -209,12 +221,14 @@ class StatusPresenter:
                 else:
                     self.cue.setText("休息，放松肌肉")
                 self.capture_status.setText(
-                    f"第 {status['trial']} / {status['trial_count']} 组 · 第 {status['action_index']} / {len(self.task.classes)} 个动作 · 剩余 {status['remaining']:.1f} 秒"
+                    f"第 {status['trial']} / {status['trial_count']} 组 · 第 {status['action_index']} / {status.get('action_count', len(self.task.classes))} 个动作 · 剩余 {status['remaining']:.1f} 秒"
                     + (
                         " · 保持动作直到倒计时结束"
-                        if status["phase"] == "动作" and status["cue"]
+                        if status["phase"] == "动作"
+                        and (status["cue"] or status.get("capture_only"))
                         else " · 放松肌肉"
                     )
+                    + (" · " + status["cue_details"] if status.get("cue_details") else "")
                     + (" · 本组已标记无效" if status.get("rejected") else "")
                 )
         assessment = snapshot.get("assessment")

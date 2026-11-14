@@ -224,8 +224,12 @@ class LibraryWidget(W.QWidget):
                 "",
                 "数据" if entry.kind == "recording" else "模型",
                 entry.meta["name"],
-                ("机器人" if entry.task.key == "robot" else "灵巧手")
-                + f" {len(entry.task.classes)}类",
+                (
+                    f"自定义 {len(entry.task.classes)} 条件"
+                    if entry.meta.get("capture_only")
+                    else ("机器人" if entry.task.key == "robot" else "灵巧手")
+                    + f" {len(entry.task.classes)}类"
+                ),
                 entry.meta["group"],
                 entry.meta.get("created_at", "")[:10],
                 "模拟设备"
@@ -293,11 +297,16 @@ class LibraryWidget(W.QWidget):
             records
             and len({e.task.task_type for e in selected}) == 1
             and len({e.meta["group"] for e in selected}) == 1
-            and all(usable_record(e.meta) for e in selected)
+            and all(usable_record(e.meta) and not e.meta.get("capture_only") for e in selected)
         )
         self.train_button.setEnabled(self.idle and trainable)
         self.train_button.setToolTip("请选择同一实验、同一组别且包含完整动作组的数据。")
-        self.replay_button.setEnabled(self.idle and records and len(selected) == 1)
+        self.replay_button.setEnabled(
+            self.idle
+            and records
+            and len(selected) == 1
+            and not selected[0].meta.get("capture_only")
+        )
         self.model_button.setEnabled(
             self.idle and len(selected) == 1 and selected[0].kind == "model"
         )

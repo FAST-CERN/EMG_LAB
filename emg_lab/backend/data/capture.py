@@ -30,11 +30,18 @@ class CaptureRun:
         task=ROBOT,
         random_order=False,
         collection_notes=None,
+        capture_plan=None,
     ):
         if int(trial_count) != trial_count or trial_count < 1:
             raise ValueError("请设置至少 1 组动作。")
         if action_s < config.window_s + 0.2 or prepare_s < 0 or rest_s < 0:
             raise ValueError("每个动作至少持续 1 秒，准备和休息时间不能为负数。")
+        if capture_plan is not None:
+            from emg_lab.contracts.acquisition import capture_task, validate_plan
+
+            capture_plan = validate_plan(capture_plan, profile["channel_ids"])
+            task = capture_task(capture_plan)
+        self.capture_plan = capture_plan
         self.task = task
         self.rejected_trials = {}
         self.action_order = task.order
@@ -74,6 +81,8 @@ class CaptureRun:
             rejected_trials=[],
             **task.metadata,
         )
+        if capture_plan is not None:
+            metadata.update(capture_plan=capture_plan, capture_only=True)
         folder = new_run(root, group, name, metadata)
         labels = []
         for segment, cls in enumerate(self.order):
@@ -98,6 +107,7 @@ class CaptureRun:
                 phase="完成" if self.completed else "已结束",
                 progress=self.received / self.session_length,
                 trial_count=self.trial_count,
+                capture_only=self.capture_plan is not None,
             )
         count = self.writer.count
         segment = count // self.segment_length
@@ -127,9 +137,20 @@ class CaptureRun:
             trial_count=self.trial_count,
             action_index=segment % self.action_count + 1,
             action_count=self.action_count,
+            capture_only=self.capture_plan is not None,
+            cue_name=self.task.names[int(self.order[segment])],
+            cue_details=self._cue_details(int(self.order[segment])),
             remaining=remaining,
             progress=self.received / self.session_length,
         )
+
+    def _cue_details(self, class_id):
+        if self.capture_plan is None:
+            return ""
+        from emg_lab.contracts.acquisition import selected_conditions
+
+        row = selected_conditions(self.capture_plan)[class_id]
+        return " · ".join(row[key] for key in ("body_part", "effort", "notes") if row[key])
 
     def feed(self, samples):
         if not self.completed and not self.stopped:

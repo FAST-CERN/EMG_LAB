@@ -300,6 +300,7 @@ class MainWindow(
             self.training_result.clear()
             self.train_status.setText("请选择当前实验目标的数据进行训练。")
             self.refresh_data()
+        self.update_capture_mode()
         self.update_capture_plan()
         self.update_hand_views()
         self.update_controls()

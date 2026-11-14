@@ -47,6 +47,8 @@ class InferencePipeline:
         # Training evaluates a ready ONNX file before publishing its manifest.
         self.meta = metadata if metadata is not None else read_json(self.folder / "metadata.json")
         self.task = task_from_metadata(self.meta)
+        if self.meta.get("capture_only"):
+            raise ValueError("自定义采集尚未配置机器人映射，不能直接用于控制推理。")
         if (
             not self.meta.get("complete")
             or self.meta.get("classes") != list(self.task.classes)

@@ -9,7 +9,11 @@ class CapturePresenter:
     def start_capture(self):
         if not self.backend.device_ready:
             raise ValueError("请先连接设备。")
-        if self.scene_check.isChecked():
+        if self.custom_capture_active():
+            self.custom_capture.sync_channels()
+            self.custom_capture.plan()  # Validate before opening files or starting a run.
+            self.begin_capture()
+        elif self.scene_check.isChecked():
             self.prepare_scene("sample", self.begin_capture)
         else:
             self.begin_capture()
@@ -88,7 +92,10 @@ class CapturePresenter:
                 self.trial_count.value(),
                 self.action_seconds.value(),
                 random_order=self.random_order.isChecked(),
-                collection_notes=self.backend.notes(self.group.text().strip()),
+                collection_notes={}
+                if self.custom_capture_active()
+                else self.backend.notes(self.group.text().strip()),
+                capture_plan=self.custom_capture.plan() if self.custom_capture_active() else None,
             )
             self._capture_identity = str(path)
         except Exception:
@@ -121,6 +128,12 @@ class CapturePresenter:
                 + (f" 标记无效 {rejected} 组，请补采。" if rejected else "")
             )
             self.refresh_data()
+            if meta.get("capture_only"):
+                self.message(
+                    f"已保存 {count} 轮自定义采集及动作索引 CSV。数据与模型页可查看、导出；暂不用于机器人训练或控制。"
+                )
+                self.update_controls()
+                return
             self.select_latest()
             self.message(
                 "数据已保存并选中，下一步进入“训练模型”。"

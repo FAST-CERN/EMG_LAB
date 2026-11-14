@@ -102,6 +102,7 @@ class Session:
         action_s=ACTION_SECONDS,
         random_order=False,
         collection_notes=None,
+        capture_plan=None,
     ):
         with self.lock:
             if not self.profile or self.inference or self.capture:
@@ -119,6 +120,7 @@ class Session:
                 task=self.task,
                 random_order=random_order,
                 collection_notes=collection_notes,
+                capture_plan=capture_plan,
             )
             return self.capture.run_path
 
