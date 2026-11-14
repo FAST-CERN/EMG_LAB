@@ -30,11 +30,10 @@ Windows 源码安装也可运行 `install.cmd`：缺少 Python 3.13 时保留原
 
 采集场景演示提示动作；实时与离线推理场景由模型预测驱动。自由练习、基础评估、机器人金币任务各有独立用途。基础评估报告显示准确率、混淆、停止误触发、响应和切换统计；从数据与模型页打开或导出历史报告。
 
-数据与模型页统一筛选、导入导出。`.emg` 包含原始信号、标签和元数据；`.emgmodel` 包含 ONNX 和模型说明。界面导出的离线实验包只包含数据/模型，配合教师发放的完整学生包使用。`examples/模拟示例包` 可用于熟悉导入与回放。
+数据与模型页统一筛选、导入导出。`.emg` 包含原始信号、标签和元数据；`.emgmodel` 包含 ONNX 和模型说明。界面导出的离线实验包只包含数据/模型，配合教师发放的完整学生包使用。可运行合成 smoke 命令检查软件流程。
 
 ## 文档与代码
 
-- [课程项目说明](docs/项目一_肌电解码与机器人及灵巧手控制.pdf)
 - [操作教程](docs/USER_GUIDE.md)、[课程约定](docs/COURSE_GUIDE.md)
 - [开发技术文档](docs/TECHNICAL_GUIDE.md)：链路、目录、数据结构、算法与扩展接口
 - [设备驱动与安装说明](drivers/README.md)：Cometa 原厂 USB 驱动、SDK 与 Python 依赖的区别
@@ -42,11 +41,11 @@ Windows 源码安装也可运行 `install.cmd`：缺少 Python 3.13 时保留原
 
 `emg_lab/frontend/` 是 Qt 前端，`emg_lab/backend/` 是无 Qt 的后台，`emg_lab/contracts/` 是共享契约；`emg_lab/` 根部旧模块保留兼容导入，`assets/` 是场景与运控资源，`vendor/` 为设备适配依赖，`scripts/` 与 `tests/` 为检查入口，`licenses/` 保留第三方许可。个人结果保存到 `data/`，运行日志保存到 `local/`，发行包不含真实采集记录、许可凭据或个人日志。
 
-源码目录包含应用、资源、驱动、文档和合成示例；离线包另带 `.runtime/` 与 `wheelhouse/`。个人结果与运行日志在首次使用后生成，`.gitignore` 已排除这些目录。第三方来源与使用范围见 [NOTICE](NOTICE.md)。
+源码目录包含应用、资源、驱动和文档；离线包另带 `.runtime/` 与 `wheelhouse/`。个人结果与运行日志在首次使用后生成，`.gitignore` 已排除这些目录。第三方来源与使用范围见 [NOTICE](NOTICE.md)。
 
 ## 验证范围
 
-运行 `检查环境.cmd` 检查软件与 3D，不连接硬件。自动化回归：`uv run pytest -q`；明确的合成全链路检查：`uv run python scripts/smoke_pipeline.py --output local/smoke`。合成结果仅验证软件流程。Windows 离线包用 `acceptance.cmd --relocation-test` 验证；Qt、Windows 和真实硬件检查的待办状态见重构报告。
+运行 `uv run python scripts/check_classroom.py --render` 检查软件与 3D，不连接硬件。自动化回归：`uv run pytest -q`；明确的合成全链路检查：`uv run python scripts/smoke_pipeline.py --output local/smoke`。合成结果仅验证软件流程。Windows 离线包用 `acceptance.cmd --relocation-test` 验证；Qt、Windows 和真实硬件检查的待办状态见重构报告。
 
 机器人金币任务所有模型同榜；固定分类速度固定，教师验收的连续/混合方法可用较高速度上限。底层运控、种子、加速度及计时规则共同冻结。学生改进算法后仍可练习，正式比赛由教师审核并冻结版本。
 

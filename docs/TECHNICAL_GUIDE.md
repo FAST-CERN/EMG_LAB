@@ -477,7 +477,7 @@ uv run pytest -q tests/test_transfer.py tests/test_student_features.py
 
 `reports.py` 汇总已有基础评估与金币报告，导出 HTML、JSON 及现有比赛指令日志，不重新计分。模型名称、输入来源与记录编号仍保留在原报告中。
 
-完整 Windows 离线包内含 `.runtime/python313`、`.runtime/uv`、`.runtime/dotnet` 和 `wheelhouse`。`start.cmd` 自动运行 `offline_bootstrap.py` 校验清单并离线初始化；`install.cmd` 在离线包中执行修复。源码安装则沿用本地运行时 > 系统 `py -3.13` > `fetch_runtime.cmd` 的获取顺序，再执行 uv 锁定同步。原有取回脚本继续保留 GBK 中文、CRLF、系统工具路径与相对解压路径约束。`检查环境.cmd` 检查前向计算、物理站稳与双渲染器；`acceptance.cmd --relocation-test` 检查完整离线发行包。当前检查结果与尚未运行的 Windows/设备项见 [RESTRUCTURE_REPORT.md](RESTRUCTURE_REPORT.md)。
+完整 Windows 离线包内含 `.runtime/python313`、`.runtime/uv`、`.runtime/dotnet` 和 `wheelhouse`。`start.cmd` 自动运行 `offline_bootstrap.py` 校验清单并离线初始化；`install.cmd` 在离线包中执行修复。源码安装则沿用本地运行时 > 系统 `py -3.13` > `fetch_runtime.cmd` 的获取顺序，再执行 uv 锁定同步。原有取回脚本继续保留 GBK 中文、CRLF、系统工具路径与相对解压路径约束。`uv run python scripts/check_classroom.py --render` 检查前向计算、物理站稳与双渲染器；`acceptance.cmd --relocation-test` 检查完整离线发行包。当前检查结果与尚未运行的 Windows/设备项见 [RESTRUCTURE_REPORT.md](RESTRUCTURE_REPORT.md)。
 
 
 ## 16 扩展分类任务

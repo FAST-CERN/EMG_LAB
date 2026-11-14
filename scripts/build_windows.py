@@ -17,14 +17,12 @@ except ImportError:
     from release_common import checked_path, extract_zip, file_hash, verify_manifest, write_json
 
 ROOT = Path(__file__).resolve().parents[1]
-SOURCE_DIRS = ("emg_lab", "assets", "docs", "licenses", "vendor", "drivers", "scripts", "examples")
+SOURCE_DIRS = ("emg_lab", "assets", "docs", "licenses", "vendor", "drivers", "scripts")
 SOURCE_FILES = (
     "main.py",
     "start.cmd",
     "install.cmd",
     "acceptance.cmd",
-    "检查环境.cmd",
-    "开始使用.txt",
     "README.md",
     "NOTICE.md",
     "CONTEXT.md",
@@ -96,8 +94,6 @@ def copy_source(source, target):
     for name in SOURCE_FILES:
         if (source / name).is_file():
             shutil.copy2(source / name, target / name)
-    for path in source.glob("requirements*.txt"):
-        shutil.copy2(path, target / path.name)
 
 
 def assemble_payload(source, target, artifacts_folder, artifacts):

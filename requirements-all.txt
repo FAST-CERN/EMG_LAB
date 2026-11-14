@@ -1,3 +1,0 @@
--r requirements-training.txt
--r requirements-robot.txt
--r requirements-hand.txt

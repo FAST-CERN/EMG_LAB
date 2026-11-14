@@ -262,7 +262,6 @@ def protected_files(root):
         root / name
         for name in (
             "main.py",
-            "requirements.txt",
             "pyproject.toml",
             "uv.lock",
             "scripts/runtime.lock",

@@ -188,5 +188,17 @@
     "assets": "Help assets and icons moved byte-for-byte to emg_lab/frontend; assets/vendor/drivers unchanged.",
     "model_registry": "Factory API adapted from the workspace emg_robot learning.models registry; original LiteCNN1D remains the default.",
     "historical_records": "Earlier paths/hashes and competition baseline describe their original snapshots; they are not current acceptance evidence."
+  },
+  "uv_and_filename_cleanup": {
+    "source_commit": "7bf5aa8",
+    "requested": "Remove redundant dependency files and files with Chinese names.",
+    "removed": "Six legacy requirements files, constraints.txt, twelve Chinese-named files, and the now-invalid example bundle manifest.",
+    "dependency_authority": [
+      "pyproject.toml",
+      "uv.lock"
+    ],
+    "retained_runtime_pin": "scripts/runtime.lock",
+    "documentation": "docs/REPOSITORY_CLEANUP.md",
+    "help": "Competition rules now open the existing native Markdown help tab."
   }
 }

@@ -43,7 +43,7 @@ The existing competition baseline and historical results were retained without r
 
 ## Environment and distribution
 
-`pyproject.toml` and `uv.lock` are the active dependency authority. The lock resolves Linux x64, Windows AMD64 and macOS arm64 environments; exporting for Windows selects 50 runtime packages. Private Windows wheels remain local sources. Root-only output ignore rules preserve the new `backend/data` source package. Old requirements/constraints files remain historical reference material.
+`pyproject.toml` and `uv.lock` are the active dependency authority. The lock resolves Linux x64, Windows AMD64 and macOS arm64 environments; exporting for Windows selects 50 runtime packages. Private Windows wheels remain local sources. Root-only output ignore rules preserve the new `backend/data` source package. The subsequent cleanup removed legacy requirements/constraints files; see [cleanup notes](REPOSITORY_CLEANUP.md).
 
 Windows launchers retain native desktop startup. Release tooling prepares verified Python/uv/.NET inputs, collects hash-locked Windows wheels and builds a manifest-backed offline ZIP. First launch initializes `.venv` offline; interrupted setup, repeat launch, repair, relocation and setup locking are covered by packaging fixture tests. Fixture executables are tests only and are never shipped as runtimes.
 

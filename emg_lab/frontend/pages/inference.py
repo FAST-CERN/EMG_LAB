@@ -4,11 +4,9 @@ from __future__ import annotations
 
 from emg_lab.frontend.components import (
     CLASS_NAMES,
-    ROOT,
     TASKS,
     HandView,
     QtCore,
-    QtGui,
     W,
     button,
     card,
@@ -120,9 +118,7 @@ class InferencePage:
                 self.race_report,
                 button(
                     "比赛规则与教师操作",
-                    lambda: QtGui.QDesktopServices.openUrl(
-                        QtCore.QUrl.fromLocalFile(str(ROOT / "docs/机器人金币任务说明.html"))
-                    ),
+                    lambda: self.open_help(3),
                 ),
                 1,
             )

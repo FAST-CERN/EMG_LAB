@@ -116,8 +116,6 @@ def source_manifest(project=ROOT):
     paths = sorted(
         [
             *project.glob("emg_lab/**/*.py"),
-            *project.glob("requirements*.txt"),
-            *project.glob("constraints.txt"),
             *project.glob("pyproject.toml"),
             *project.glob("uv.lock"),
             *project.glob("assets/classroom/*.xml"),

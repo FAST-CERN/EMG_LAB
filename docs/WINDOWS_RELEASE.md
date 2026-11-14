@@ -13,7 +13,7 @@ uv run pytest -q
 uv run python scripts/smoke_pipeline.py --output local/smoke
 ```
 
-`install.cmd` retains the original verified Python 3.13.5 NuGet fallback when neither the bundled interpreter nor system Python 3.13 is available. It then obtains uv if needed and runs `uv sync --locked`. Source installation requires network access. `requirements*.txt` and `constraints.txt` remain historical reference files; active installation uses `pyproject.toml` and `uv.lock`.
+`install.cmd` retains the original verified Python 3.13.5 NuGet fallback when neither the bundled interpreter nor system Python 3.13 is available. It then obtains uv if needed and runs `uv sync --locked`. Source installation requires network access. Dependency declarations live only in `pyproject.toml` and `uv.lock`. The offline builder derives `requirements-offline.txt` from the lock for `uv pip sync`; it is a generated release artifact, not a second dependency specification.
 
 On Linux, the core/backend can be developed without importing Qt or Windows SDKs. The full development dependency set includes Qt; use the project environment after installation. macOS arm64 retains the simulated-device UI path. Neither platform substitutes for Windows acceptance.
 
