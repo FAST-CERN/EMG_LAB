@@ -1,1 +1,10 @@
-VERSION = '2026.10.26-classroom.2'
+"""Compatibility entrypoint; implementation: emg_lab.contracts.version."""
+
+import importlib
+import runpy
+import sys
+
+if __name__ == "__main__":
+    runpy.run_module("emg_lab.contracts.version", run_name="__main__")
+else:
+    sys.modules[__name__] = importlib.import_module("emg_lab.contracts.version")

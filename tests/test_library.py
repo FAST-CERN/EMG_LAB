@@ -60,14 +60,14 @@ def test_mixed_import_filters_selection_and_training_jump(window,tmp_path,profil
     window.use_library('replay',library.selected())
     assert window.task==HAND and window.source.currentData()=='replay'
     assert Path(window.replay_records.currentData()).is_relative_to(window.session.root)
-    window.training = object()
+    window.backend._training = object()
     try:
         window.update_controls()
         assert not library.import_button.isEnabled() and not library.replay_button.isEnabled()
         with pytest.raises(ValueError,match='结束'):
             library.import_paths([robot])
     finally:
-        window.training = None
+        window.backend._training = None
 
 
 def test_bundle_includes_linked_records_roundtrips_and_checks_tampering(tmp_path,profile):
@@ -130,8 +130,8 @@ def test_library_footer_and_table_fit_small_window(window):
 
 def test_live_and_replay_scene_use_same_worker_and_settings(window):
     from emg_lab.physics.scene import SceneWindow
-    live = SceneWindow('open',source='live')
-    replay = SceneWindow('open',source='replay')
+    live = SceneWindow('open',window,source='live')
+    replay = SceneWindow('open',window,source='replay')
     try:
         assert live.scene_id==replay.scene_id=='g1_outdoor_15m_v1'
         assert type(live.worker) is type(replay.worker)

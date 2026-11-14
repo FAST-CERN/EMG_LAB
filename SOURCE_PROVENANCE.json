@@ -178,5 +178,15 @@
     "assets": "emg_lab/help_assets (highlight.js 11.12.0 common UMD-min + powershell language pack + official github light theme)",
     "license_and_hashes": "licenses/help-js/README.md",
     "reason": "course guides' code fences need offline syntax color and language badges; common bundle lacks powershell, so the language pack rides along"
+  },
+  "structure_refactor_20261114": {
+    "date": "2026-11-14",
+    "source_commit": "c838231",
+    "mapping": "docs/structure-migration.json",
+    "report": "docs/RESTRUCTURE_REPORT.md",
+    "implementation": "Original modules moved into backend, frontend and contracts; legacy import aliases retained.",
+    "assets": "Help assets and icons moved byte-for-byte to emg_lab/frontend; assets/vendor/drivers unchanged.",
+    "model_registry": "Factory API adapted from the workspace emg_robot learning.models registry; original LiteCNN1D remains the default.",
+    "historical_records": "Earlier paths/hashes and competition baseline describe their original snapshots; they are not current acceptance evidence."
   }
 }

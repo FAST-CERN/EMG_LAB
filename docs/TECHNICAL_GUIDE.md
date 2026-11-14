@@ -2,13 +2,13 @@
 
 这是一套 Windows 上的肌电分类课堂实验：PySide6 提供操作界面，设备进程采集多通道信号，PyTorch 训练轻量一维 CNN，ONNX Runtime 执行在线推理，MuJoCo 显示机器人或灵巧手。学生可以从界面、信号处理、模型和评估四个方向改进它。
 
-本文对应包含持久导入导出与离线帮助功能的源码。模块路径均相对项目根目录，命令在该目录的 PowerShell 执行。先跑通模拟链路，再通过已有数据、测试和完整界面流程验证开发改动。
+本文对应前后端分层后的源码。结构与验收状态见 [重构报告](RESTRUCTURE_REPORT.md)。模块路径均相对项目根目录，命令在该目录的 PowerShell 执行。先跑通模拟链路，再通过已有数据、测试和完整界面流程验证开发改动。
 
 ## 1 系统整体链路
 
 ```mermaid
 flowchart TD
-    main["main.py → app.MainWindow<br/>Qt 主线程，四步实验 + 数据与模型"]
+    main["main.py → bootstrap → frontend.MainWindow<br/>Qt 主线程，页面与呈现"]
 
     subgraph worker["device_worker（独立 Python 子进程）"]
         sim["模拟设备<br/>每 20 ms 生成一块信号"]
@@ -16,7 +16,8 @@ flowchart TD
         delsys["Delsys SDK<br/>.NET 8 / CoreCLR"]
     end
 
-    main -->|"启动"| dp["DeviceProcess<br/>JSON Lines 子进程通信"]
+    main --> api["backend.ApplicationService<br/>任务与生命周期，无 Qt"]
+    api -->|"启动"| dp["DeviceProcess<br/>JSON Lines 子进程通信"]
     dp -->|"运行"| worker
     worker -->|"frame：seq / captured_at / shape=[N,C]<br/>base64 小端 float32"| session["engine.Session.feed(raw[N,C])"]
 
@@ -33,7 +34,7 @@ flowchart TD
     s5 --> o3["灵巧手运动学 3D 显示"]
     s5 --> o4["显式启用的真实 DDS / USB 输出"]
 
-    main -->|"训练请求 JSON"| tw["train_worker<br/>独立子进程"]
+    api -->|"训练请求 JSON"| tw["train_worker<br/>独立子进程"]
     tw --> t1[".emg → 完整 trial 划分"]
     t1 --> t2["滤波/切窗 → 训练集标准化"]
     t2 --> t3["LiteCNN1D 训练 → ONNX 导出<br/>→ 数值一致性检查"]
@@ -46,53 +47,33 @@ flowchart TD
 ## 2 文件夹架构和修改入口
 
 ```text
-emg_classroom_demo/
-├─ main.py                      启动 Qt 应用
-├─ start.cmd / install.cmd      启动与依赖安装
-├─ requirements*.txt            基础、训练、机器人、灵巧手依赖
-├─ constraints.txt              已验证版本约束
+EMG_LAB_2026/
+├─ main.py / start.cmd            桌面启动；离线包首次运行自动建环境
+├─ pyproject.toml / uv.lock       uv 唯一活动依赖声明与解析锁
 ├─ emg_lab/
-│  ├─ app.py                    页面、控件、流程编排
-│  ├─ theme.py / widgets.py     统一主题、分区与字段布局
-│  ├─ icons/                    界面下拉与数值调节图标
-│  ├─ help.py                   可搜索的离线帮助窗口，WebEngine 渲染 Mermaid 图，缺组件时回退纯文本
-│  ├─ help_assets/              帮助页本地 marked、mermaid 脚本与样式
-│  ├─ library.py                统一数据/模型管理页、筛选与用途跳转
-│  ├─ catalog.py                文件目录、跨目标传输、离线实验包与清单
-│  ├─ transfer.py               持久导入、打包导出、完整性检查
-│  ├─ tasks.py                  目标、类别顺序、控制参数
-│  ├─ processes.py              JSON Lines 子进程通信
-│  ├─ device_worker.py          模拟/Cometa/Delsys 设备进程
-│  ├─ engine.py                 Session 状态、回放、预测日志
-│  ├─ waveform.py               多通道波形预览
-│  ├─ signal.py                 因果滤波、滑窗和配置匹配
-│  ├─ capture.py                采样点驱动的动作流程与标签
-│  ├─ storage.py                .emg 读写、文件列表、命名
-│  ├─ network.py                LiteCNN1D 模型定义
-│  ├─ training.py               数据划分、训练、导出、评估
-│  ├─ train_worker.py           训练进程入口
-│  ├─ inference.py              ONNX 滑窗和稳定指令
-│  ├─ evaluation.py             连续回放评分和结果文案
-│  ├─ practice.py               实时提示评估、回放对照与 HTML/JSON 报告
-│  ├─ robot.py                  机器人场景与 DDS 输出适配
-│  ├─ physics/                  G1 物理仿真、运控、环境和相机
-│  └─ hand/                     Revo2 模型、场景、USB 输出
-│     ├─ poses.py               官方示例目标姿态、可中断单控制器
-│     └─ driver/                已验证的达妙/Revo2 驱动层
-├─ assets/
-│  ├─ g1/                       G1 XML 与网格
-│  ├─ policies/                 预训练 Balance/Walk ONNX
-│  ├─ classroom/                户外环境、提示贴图
-│  └─ revo2/                    左手模型、网格、来源清单
-├─ vendor/                      Cometa/Delsys SDK 与私有 wheel
-├─ docs/                        操作教程与本技术文档
-├─ tests/                       数据、算法、输出生命周期和 UI 测试
-├─ scripts/                     完整 UI、场景、资源、DDS 验收
-├─ licenses/                    上游许可证与物理资源来源
-├─ data/<组别>/                 recordings / models / predictions / evaluations
-├─ local/                       请求、日志、验收报告、截图
-├─ .venv/                       当前项目虚拟环境
-└─ .runtime/                    离线包自带的 Python 3.13；不进入 Git
+│  ├─ bootstrap.py               组合入口：注入后台服务
+│  ├─ paths.py                   集中管理项目与输出路径
+│  ├─ contracts/                 任务、配置、事件、指令与快照（无 Qt）
+│  ├─ backend/
+│  │  ├─ application.py          设备/训练/采集/推理/输出的服务与生命周期
+│  │  ├─ data/                   记录、采集、目录、导入导出、报告
+│  │  ├─ learning/               数据划分、网络注册、训练、推理、评估
+│  │  ├─ runtime/                Session、子进程通信、设备/训练入口
+│  │  ├─ robot/                  运控、MuJoCo、场景工作线程、DDS
+│  │  └─ hand/                   手模型、姿态、渲染、USB、驱动
+│  ├─ frontend/
+│  │  ├─ window.py               主窗口外壳与服务事件呈现
+│  │  ├─ pages/                  页面与控件布局
+│  │  ├─ presenters/             用户操作、服务调用、界面状态
+│  │  ├─ bridge.py               后台线程 → Qt 排队信号与 RGB 图像适配
+│  │  └─ help_assets/、icons/     离线帮助与界面资源
+│  └─ app.py 等旧模块            兼容导入层；新开发使用上面的明确路径
+├─ assets/、vendor/、drivers/     原有场景、模型、SDK 与驱动资源
+├─ docs/、licenses/               文档、决策、来源与许可证
+├─ scripts/                       开发检查、离线打包、Windows 验收
+├─ tests/                         核心与 Qt 回归
+├─ data/、local/                  用户结果、请求与日志，不进入发行包
+└─ .runtime/、wheelhouse/、.venv/  离线包运行依赖与本机环境，不进入 Git
 ```
 
 `.venv`、`.runtime` 是运行环境，数据和许可属于本机内容。核心源码位于 `emg_lab`，测试位于 `tests`，文档位于 `docs`。运行时、模型网格与实验数据独立存放。
@@ -101,18 +82,19 @@ emg_classroom_demo/
 
 ### 界面主题与布局
 
-`emg_lab/theme.py` 统一字体、配色、控件状态与样式；`emg_lab/widgets.py` 提供分区卡片和字段布局。`app.py` 组织四步实验流程。组别、数据名称、采集参数、模型名称、学习遍数及推理来源始终展开；运行期间禁用编辑，保留配置可读。评估细节、保存规则和 DDS 技术参数可按需展开。主要操作固定在页底，正文在小窗口中纵向滚动。
+`emg_lab/frontend/theme.py` 统一字体、配色、控件状态与样式；`emg_lab/frontend/widgets.py` 提供分区卡片和字段布局。`frontend/window.py` 组合页面与 presenter，`backend/application.py` 管理运行状态。组别、数据名称、采集参数、模型名称、学习遍数及推理来源始终展开；运行期间禁用编辑，保留配置可读。评估细节、保存规则和 DDS 技术参数可按需展开。主要操作固定在页底，正文在小窗口中纵向滚动。
 
 ## 3 进程 线程和状态边界
 
 | 执行位置 | 职责 | 边界 |
 | --- | --- | --- |
-| Qt 主线程 | 控件、流程切换、50 ms 定时刷新 | 设备回调通过 Qt Signal 回到界面 |
+| Qt 主线程 | 控件、流程切换、50 ms 定时刷新 | 服务事件经排队 Qt Signal 呈现；不拥有 Session |
+| 应用后台线程 | 20 ms 服务轮询、完成与断流处理 | 仅新 sample_end 续发分类控制；无 Qt |
 | 设备子进程 | SDK 加载、采集、模拟信号 | Cometa 与 Delsys 的不同 .NET 运行时隔离 |
 | JsonProcess 读取线程 | 读取 stdout，解析事件、检查序列与延迟 | 诊断输出进入 stderr 日志 |
 | 训练子进程 | CPU 训练、ONNX 导出与评估 | 通过 JSON 事件报告进度、错误、完成 |
 | Session 回放线程 | 按采样率重放原始信号 | 使用停止事件和锁退出 |
-| 场景工作线程 | MuJoCo 步进、渲染、状态回传 | UI 接收 QImage，不直接操作物理内部对象 |
+| 场景工作线程 | MuJoCo 步进、渲染、状态回传 | 后台只发 RGB 数组；Qt 适配层在主线程创建 QImage |
 
 设备帧事件包含 `type=frame`、`seq`、`captured_at`、`shape=[N,C]` 和 base64 编码的小端 float32 `data`。每行是一条 JSON。若序列不连续或收到的帧已积压超过 1 秒，进程包装器报告错误并停止。
 
@@ -296,7 +278,7 @@ flowchart TD
 ```
 
 ```powershell
-.\.venv\Scripts\python.exe -m emg_lab.train_worker local\train-request.json
+uv run python -m emg_lab.backend.runtime.train_worker local\train-request.json
 ```
 
 标准输出为每行一条 JSON 事件，类型包括 `progress`、`complete` 和 `error`；完成事件返回模型目录和元数据。Python 内也可调用 `training.train(request, emit=callback)`，返回模型目录 `Path`。批量实验时为每次请求设置可区分的名称，并记录代码版本及数据划分。
@@ -421,23 +403,23 @@ flowchart LR
 
 ## 13 开发环境 测试和定位问题
 
-学生离线包自带 Python 3.13.5，运行 `install.cmd` 建立独立 `.venv`。Delsys 所需的 .NET 8 与设备许可由教师另行准备；如果在 `.runtime/dotnet` 安装了 .NET，`start.cmd` 会配置其路径。依赖版本由 `requirements-all.txt` 和 `constraints.txt` 管理，CPU 即可训练和推理，3D 另需 OpenGL。
+完整离线包自带 Python 3.13.5、uv、Windows wheel 与应用级 .NET 8，`start.cmd` 首次启动自动建立 `.venv`。源码开发使用 `uv sync --locked`。依赖版本由 `pyproject.toml` 和 `uv.lock` 管理；USB 驱动、系统 .NET Framework 和设备许可由教师安排。CPU 即可训练和推理，3D 需要 OpenGL。发行与验收命令见 [WINDOWS_RELEASE.md](WINDOWS_RELEASE.md)。
 
 ```powershell
 # 依赖和自动化测试
-.\.venv\Scripts\python.exe -m pip check
-.\.venv\Scripts\python.exe -m pytest -q
+uv pip check
+uv run pytest -q
 
 # 资源校验与完整流程
-.\.venv\Scripts\python.exe scripts\download_robot_assets.py --check
-.\.venv\Scripts\python.exe scripts\check_hand_assets.py
-.\.venv\Scripts\python.exe -m scripts.check_ui --physics
-.\.venv\Scripts\python.exe -m scripts.check_hand_ui
-.\.venv\Scripts\python.exe -m scripts.check_dds
-.\.venv\Scripts\python.exe -m scripts.check_help
+uv run python scripts\download_robot_assets.py --check
+uv run python scripts\check_hand_assets.py
+uv run python -m scripts.check_ui --physics
+uv run python -m scripts.check_hand_ui
+uv run python -m scripts.check_dds
+uv run python -m scripts.check_help
 
 # 专项验证
-.\.venv\Scripts\python.exe -m pytest -q tests/test_transfer.py tests/test_student_features.py
+uv run pytest -q tests/test_transfer.py tests/test_student_features.py
 ```
 
 `check_ui --physics` 验证机器人实际界面、采集、训练、实时解码、回放和退出；`check_hand_ui` 使用默认 5 组并验证三分类、3D、停止保持和回放；`check_dds` 只使用 loopback、Domain 153；`check_help` 在桌面会话验证帮助窗口的 Mermaid 渲染与四个标签页加载，报告写入 `local/help-check.json`。
@@ -495,7 +477,7 @@ flowchart LR
 
 `reports.py` 汇总已有基础评估与金币报告，导出 HTML、JSON 及现有比赛指令日志，不重新计分。模型名称、输入来源与记录编号仍保留在原报告中。
 
-Windows 学生离线包内含 `.runtime/python313` 和 `wheelhouse`。`install.cmd` 按优先级链选择解释器：本地运行时 `.runtime` > 系统解释器 `py -3.13` > 按 `scripts/runtime.lock`（版本 + SHA256 + 官方与镜像 URL）由 `scripts/fetch_runtime.cmd` 取回同源 python.org NuGet 工件到 `.runtime\python313`；哈希失配即拒绝解压，失败时提示改用学生离线包。随后 `scripts/bootstrap.py` 校验依赖后创建本目录的 `.venv`；重复运行可补完中断安装。取回脚本必须保持：GBK 编码中文、CRLF 行尾、系统工具钉死 `%SystemRoot%\System32`（PATH 可能解析到 Git 的 GNU tar，读不了 zip）、全程相对路径（tar 把 `C:\` 当远程主机名且不支持 `--force-local`）——这些约束源于 cmd 解析器的缺陷，改动时勿破。`检查环境.cmd` 检查网络前向计算、机器人物理站稳、手部姿态与两种 3D 渲染，结果写入 `local/classroom_check.json`，不会连接真实设备。测试命令仍为 `.venv\Scripts\python.exe -m pytest -q`。
+完整 Windows 离线包内含 `.runtime/python313`、`.runtime/uv`、`.runtime/dotnet` 和 `wheelhouse`。`start.cmd` 自动运行 `offline_bootstrap.py` 校验清单并离线初始化；`install.cmd` 在离线包中执行修复。源码安装则沿用本地运行时 > 系统 `py -3.13` > `fetch_runtime.cmd` 的获取顺序，再执行 uv 锁定同步。原有取回脚本继续保留 GBK 中文、CRLF、系统工具路径与相对解压路径约束。`检查环境.cmd` 检查前向计算、物理站稳与双渲染器；`acceptance.cmd --relocation-test` 检查完整离线发行包。当前检查结果与尚未运行的 Windows/设备项见 [RESTRUCTURE_REPORT.md](RESTRUCTURE_REPORT.md)。
 
 
 ## 16 扩展分类任务
@@ -508,3 +490,13 @@ Windows 学生离线包内含 `.runtime/python313` 和 `wheelhouse`。`install.c
 4. 增加采集、训练、回放与动作切换检查。自定义任务先在仿真练习，正式比赛仍须遵守教师冻结的输出接口和速度规则。
 
 这种注册方式针对离散分类。连续/混合控制应输出速度向量或连续幅度，需要相应标签、训练目标与控制适配，不应强行表达为“再加一个类别”。机器人连续接口见 `COMPETITION.md`。本版没有添加任意新动作的图形编辑器，避免出现只有名称而没有执行逻辑的任务。
+
+
+## 17 新结构中的扩展入口
+
+新实现应导入 `emg_lab.backend`、`emg_lab.contracts` 或 `emg_lab.frontend` 的明确模块。本文其余旧短路径仍由兼容别名支持；逐项映射见 `docs/structure-migration.json`。
+
+- 网络：在 `backend/learning/models.py` 使用 `register_model(name, factory)` 注册可信工厂，输入 `[B,C,W]`，输出 `[B,K]` logits。训练请求的 `architecture`、`model_config` 写入模型元数据。工厂必须在训练子进程中同样完成注册；模型文件不会执行附带 Python 代码。
+- 数据：`backend/learning/dataset.py` 保留完整 trial 划分、因果滤波和训练集统计。无真实数据时仅运行明确标记的合成检查，不据此声称真实准确率。
+- 控制：`contracts/control.py` 保留分类命令、`CommandSettings` 与机身坐标速度 `(vx, vy, yaw_rate)` 的限幅约定；`backend/robot/worker.py` 和 `simulation.py` 接收控制请求。速度 API 的存在不代表已实现连续肌电解码；不得从离散分类标签虚构回归目标。
+- 界面：`frontend/pages/` 修改布局，`frontend/presenters/` 修改呈现与用户操作。后台不导入 Qt；后台事件经过 `frontend/bridge.py` 和窗口事件桥排队送达主线程。

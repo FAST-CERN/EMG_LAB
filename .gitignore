@@ -3,8 +3,10 @@
 wheelhouse/
 __pycache__/
 .pytest_cache/
-data/
-local/
+/data/
+/local/
+/.cache/
+/.ruff_cache/
 *.log
 dist/
 build/

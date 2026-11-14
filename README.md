@@ -6,9 +6,18 @@
 
 **完整离线包同时包含源码、文档、场景、驱动和 Python 运行依赖**。完整解压后按下列步骤操作，无需先安装 Python。
 
-学生离线包完整解压后，运行 `install.cmd`，再运行 `start.cmd`。随包 Python 3.13、固定版本依赖和场景资源可用于无网络安装；只在当前目录创建 `.venv`，不安装硬件驱动。首次运行可选择模拟设备。详细入口见 `开始使用.txt`，软件内按 F1 打开帮助。
+离线发行包完整解压后双击 `start.cmd`，首次启动自动使用随包 Python、uv 和锁定 wheel 建立本目录的 `.venv`，无需联网。安装中断可重试，修复可运行 `install.cmd`。移动文件夹后会重新建立环境；不要复制其他电脑的 `.venv`。
 
-两种方式均为正式安装渠道。除学生离线包外，可**联网在线安装**：从 GitHub 克隆或下载 ZIP 解压（<https://github.com/FAST-CERN/EMG_LAB>），运行 `install.cmd`——本机没有 Python 3.13 时会按 `scripts/runtime.lock` 自动取回与学生离线包同源的 Python 3.13.5，再在线安装依赖，全程约需 600MB 下载。CPU 即可训练和推理，3D 需要 OpenGL；无网环境仍请使用学生离线包。
+当前 Git 仓库是源码，不包含运行时与 wheelhouse。开发时安装 uv 后运行：
+
+```powershell
+uv sync --locked
+uv run --locked python main.py
+```
+
+Windows 源码安装也可运行 `install.cmd`：缺少 Python 3.13 时保留原有按 SHA256 验证的 NuGet 3.13.5 获取链，再使用 uv 同步锁定依赖。目标是 Windows 10 22H2 / Windows 11 x64，3D 需要 OpenGL；本次 Linux 工作区尚未完成 Windows GUI 验收。
+
+[重构报告](docs/RESTRUCTURE_REPORT.md)记录架构与当前验证范围，[离线发行与验收](docs/WINDOWS_RELEASE.md)说明如何生成真正包含运行依赖的 ZIP。当前尚未下载运行时与全部 Windows wheel，因此本次没有生成可分发 ZIP。
 
 ## 课堂功能
 
@@ -31,13 +40,13 @@
 - [设备驱动与安装说明](drivers/README.md)：Cometa 原厂 USB 驱动、SDK 与 Python 依赖的区别
 - [金币任务规则](docs/COMPETITION.md)、[速度实验记录](docs/CONTROL_ENVELOPE_V2.md)、[手部姿态来源](docs/HAND_POSES.md)
 
-`emg_lab/` 是应用源码，`assets/` 是场景与运控资源，`vendor/` 为设备适配依赖，`scripts/` 与 `tests/` 为检查入口，`licenses/` 保留第三方许可。个人结果保存到 `data/`，运行日志保存到 `local/`，发行包不含真实采集记录、许可凭据或个人日志。
+`emg_lab/frontend/` 是 Qt 前端，`emg_lab/backend/` 是无 Qt 的后台，`emg_lab/contracts/` 是共享契约；`emg_lab/` 根部旧模块保留兼容导入，`assets/` 是场景与运控资源，`vendor/` 为设备适配依赖，`scripts/` 与 `tests/` 为检查入口，`licenses/` 保留第三方许可。个人结果保存到 `data/`，运行日志保存到 `local/`，发行包不含真实采集记录、许可凭据或个人日志。
 
 源码目录包含应用、资源、驱动、文档和合成示例；离线包另带 `.runtime/` 与 `wheelhouse/`。个人结果与运行日志在首次使用后生成，`.gitignore` 已排除这些目录。第三方来源与使用范围见 [NOTICE](NOTICE.md)。
 
 ## 验证范围
 
-运行 `检查环境.cmd` 检查软件与 3D，不连接硬件。自动化回归：`.venv\Scripts\python.exe -m pytest -q`。本发行包在本机独立新环境验证，其他电脑仍需检查显卡；Cometa 实采待设备方便时验收。
+运行 `检查环境.cmd` 检查软件与 3D，不连接硬件。自动化回归：`uv run pytest -q`；明确的合成全链路检查：`uv run python scripts/smoke_pipeline.py --output local/smoke`。合成结果仅验证软件流程。Windows 离线包用 `acceptance.cmd --relocation-test` 验证；Qt、Windows 和真实硬件检查的待办状态见重构报告。
 
 机器人金币任务所有模型同榜；固定分类速度固定，教师验收的连续/混合方法可用较高速度上限。底层运控、种子、加速度及计时规则共同冻结。学生改进算法后仍可练习，正式比赛由教师审核并冻结版本。
 

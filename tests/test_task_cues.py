@@ -53,7 +53,7 @@ def test_task_selectors_sync_filter_models_and_accept_registered_new_scheme(tmp_
         assert all(c.currentData()=='student8' for c in (window.task_choice,window.training_task_choice,window.inference_task_choice))
         assert window.mock_action.count()==8 and len(window.probabilities)>=8
         assert window.probabilities[7].format()=='自定义  %p%'
-        window.training=object();window.update_controls()
+        window.backend._training=object();window.update_controls()
         assert not window.training_task_choice.isEnabled() and not window.inference_task_choice.isEnabled()
     finally:
-        window.training=None;window.close()
+        window.backend._training=None;window.close()
